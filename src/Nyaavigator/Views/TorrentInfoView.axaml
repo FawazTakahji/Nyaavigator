@@ -1,0 +1,474 @@
+<UserControl x:Class="Nyaavigator.Views.TorrentInfoView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="vms:TorrentInfoViewModel"
+             mc:Ignorable="d">
+    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" RowDefinitions="Auto, Auto, *">
+        <!--  Name And Button  -->
+        <Grid Grid.Row="0"
+              Margin="10,5,5,10"
+              ColumnDefinitions="*, Auto">
+            <!--  Name  -->
+            <SelectableTextBlock Grid.Column="0"
+                                 VerticalAlignment="Center"
+                                 FontSize="20"
+                                 Text="{Binding Info.Name, Mode=OneTime}"
+                                 TextTrimming="CharacterEllipsis"
+                                 ToolTip.Tip="{Binding Info.Name, Mode=OneTime}">
+                <SelectableTextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <MultiBinding.Bindings>
+                            <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                            <Binding Mode="OneWay" Path="!NoInfo" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </SelectableTextBlock.IsVisible>
+            </SelectableTextBlock>
+            <!--  Name  -->
+
+            <!--  Close Button  -->
+            <Button Name="CloseButton"
+                    Grid.Column="1"
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Classes="accent"
+                    Content="{mi:MaterialIconExt Close, Size=20}" />
+            <!--  Close Button  -->
+        </Grid>
+        <!--  Name And Button  -->
+
+        <!--  Separator  -->
+        <Separator Grid.Row="1" Background="{DynamicResource SeparatorBrush}">
+            <Separator.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <MultiBinding.Bindings>
+                        <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                        <Binding Mode="OneWay" Path="!NoInfo" />
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Separator.IsVisible>
+        </Separator>
+        <!--  Separator  -->
+
+        <!--  Information  -->
+        <ScrollViewer Name="ScrollViewer"
+                      Grid.Row="2"
+                      TemplateApplied="SetupScrollViewer">
+            <ScrollViewer.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <MultiBinding.Bindings>
+                        <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                        <Binding Mode="OneWay" Path="!NoInfo" />
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </ScrollViewer.IsVisible>
+
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto">
+                <Grid.Styles>
+                    <Style Selector="mi|MaterialIcon.ExpanderIcon">
+                        <Setter Property="Width" Value="24" />
+                        <Setter Property="Height" Value="24" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
+                    </Style>
+                    <Style Selector="TextBlock.ExpanderText">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="FontSize" Value="18" />
+                    </Style>
+                </Grid.Styles>
+
+                <!--  Information  -->
+                <Expander Grid.Row="0" IsExpanded="True">
+                    <!--  Header  -->
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto, Auto">
+                            <mi:MaterialIcon Grid.Column="0"
+                                             Classes="ExpanderIcon"
+                                             Kind="AboutCircleOutline" />
+                            <TextBlock Grid.Column="1"
+                                       Classes="ExpanderText"
+                                       Text="Information" />
+                        </Grid>
+                    </Expander.Header>
+                    <!--  Header  -->
+
+                    <Grid HorizontalAlignment="Stretch"
+                          ColumnDefinitions="Auto, Auto"
+                          RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+                        <!--  Left Side  -->
+
+                        <!--  Category  -->
+                        <SelectableTextBlock Grid.Row="0"
+                                             Grid.Column="0"
+                                             Margin="0,0,5,0">
+                            <Run Text="Category:" />
+                            <Run Text="{Binding Info.Category, Mode=OneTime, Converter={StaticResource CategoryIconStringToDescription}}" />
+                        </SelectableTextBlock>
+                        <!--  Category  -->
+
+                        <!--  Size  -->
+                        <SelectableTextBlock Grid.Row="1"
+                                             Grid.Column="0"
+                                             Margin="0,0,5,0">
+                            <Run Text="Size:" />
+                            <Run Text="{Binding Info.Size, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Size  -->
+
+                        <!--  Seeders  -->
+                        <SelectableTextBlock Grid.Row="2"
+                                             Grid.Column="0"
+                                             Margin="0,0,5,0">
+                            <Run Text="Seeders:" />
+                            <Run Text="{Binding Info.Seeders, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Seeders  -->
+
+                        <!--  Leechers  -->
+                        <SelectableTextBlock Grid.Row="3"
+                                             Grid.Column="0"
+                                             Margin="0,0,5,0">
+                            <Run Text="Leechers:" />
+                            <Run Text="{Binding Info.Leechers, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Leechers  -->
+
+                        <!--  Downloads  -->
+                        <SelectableTextBlock Grid.Row="4"
+                                             Grid.Column="0"
+                                             Margin="0,0,5,0">
+                            <Run Text="Downloads:" />
+                            <Run Text="{Binding Info.Downloads, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Downloads  -->
+
+                        <!--  Left Side  -->
+
+                        <!--  Right Side  -->
+
+                        <!--  Submitter  -->
+                        <SelectableTextBlock Grid.Row="0"
+                                             Grid.Column="1"
+                                             Text="Submitter: ">
+                            <ui:HyperlinkButton Classes="Inline"
+                                                Command="{StaticResource OpenLinkCommand}"
+                                                CommandParameter="{Binding Info.Submitter.Link, Mode=OneTime}"
+                                                Content="{Binding Info.Submitter.Name, Mode=OneTime}"
+                                                IsEnabled="{Binding Info.Submitter.Link, Mode=OneTime, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </SelectableTextBlock>
+                        <!--  Submitter  -->
+
+                        <!--  Information  -->
+                        <SelectableTextBlock Grid.Row="1"
+                                             Grid.Column="1"
+                                             Text="Information: ">
+                            <ui:HyperlinkButton Classes="Inline"
+                                                Command="{StaticResource OpenLinkCommand}"
+                                                CommandParameter="{Binding Info.Information, Mode=OneTime}"
+                                                Content="{Binding Info.Information, Mode=OneTime}"
+                                                IsVisible="{Binding Info.Information, Converter={StaticResource LinkIsValid}, Mode=OneTime}" />
+                            <SelectableTextBlock IsVisible="{Binding Info.Information, Converter={StaticResource LinkIsNotValid}, Mode=OneTime}" Text="{Binding Info.Information, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Information  -->
+
+                        <!--  Hash  -->
+                        <SelectableTextBlock Grid.Row="2"
+                                             Grid.Column="1"
+                                             Text="Info Hash: ">
+                            <ui:HyperlinkButton Classes="Inline"
+                                                Command="{Binding CopyHashCommand}"
+                                                Content="{Binding Info.Hash, Mode=OneTime}"
+                                                IsEnabled="{Binding Info.Hash, Converter={x:Static StringConverters.IsNotNullOrEmpty}, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Hash  -->
+
+                        <!--  Date  -->
+                        <SelectableTextBlock Grid.Row="3" Grid.Column="1">
+                            <Run Text="Date:" />
+                            <Run Text="{Binding Info.Date, StringFormat=\{0:yyyy/MMM/dd hh:mm tt\}, Mode=OneTime}" />
+                        </SelectableTextBlock>
+                        <!--  Date  -->
+
+                        <!--  Right Side  -->
+                    </Grid>
+                </Expander>
+                <!--  Information  -->
+
+                <!--  Files  -->
+                <Expander Grid.Row="1">
+                    <!--  Header  -->
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto, Auto">
+                            <mi:MaterialIcon Grid.Column="0"
+                                             Classes="ExpanderIcon"
+                                             Kind="FileOutline" />
+                            <TextBlock Grid.Column="1"
+                                       Classes="ExpanderText"
+                                       Text="Files" />
+                        </Grid>
+                    </Expander.Header>
+                    <!--  Header  -->
+
+                    <TreeView ItemsSource="{Binding Info.Items, Mode=OneTime}"
+                              SelectionChanged="ExpandItem"
+                              SelectionMode="Single">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children, Mode=OneTime}">
+                                <Grid ColumnDefinitions="Auto, *, Auto" ToolTip.Tip="{Binding Name, Mode=OneTime}">
+                                    <!--  Icon  -->
+                                    <mi:MaterialIcon Grid.Column="0" Kind="{Binding Icon, Mode=OneTime}" />
+                                    <!--  Icon  -->
+
+                                    <!--  Name  -->
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               Text="{Binding Name, Mode=OneTime}" />
+                                    <!--  Name  -->
+
+                                    <!--  Size or Item Count  -->
+                                    <TextBlock Grid.Column="2"
+                                               Margin="0,0,5,0"
+                                               FontWeight="Bold"
+                                               Text="{Binding Details, Mode=OneTime}" />
+                                    <!--  Size or Item Count  -->
+                                </Grid>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Expander>
+                <!--  Files  -->
+
+                <!--  Description  -->
+                <Expander Grid.Row="2" Collapsed="VisibilityBug">
+                    <!--  Header  -->
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto, Auto">
+                            <mi:MaterialIcon Grid.Column="0"
+                                             Classes="ExpanderIcon"
+                                             Kind="TextBoxOutline" />
+                            <TextBlock Grid.Column="1"
+                                       Classes="ExpanderText"
+                                       Text="Description" />
+                        </Grid>
+                    </Expander.Header>
+                    <!--  Header  -->
+
+                    <md:MarkdownScrollViewer Initialized="SetHyperlinkCommand" Markdown="{Binding Info.Description, Mode=OneTime}" />
+                </Expander>
+                <!--  Description  -->
+
+                <!--  Comments  -->
+                <Expander Grid.Row="3" IsVisible="{Binding Info.Comments.Count, Mode=OneTime}">
+                    <!--  Header  -->
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto, Auto">
+                            <mi:MaterialIcon Grid.Column="0"
+                                             Classes="ExpanderIcon"
+                                             Kind="CommentsOutline" />
+                            <TextBlock Grid.Column="1"
+                                       Classes="ExpanderText"
+                                       Text="Comments" />
+                        </Grid>
+                    </Expander.Header>
+                    <!--  Header  -->
+
+                    <ItemsRepeater Name="CommentsRepeater"
+                                   Margin="{Binding #ScrollButton.IsVisible, Mode=OneWay, Converter={StaticResource RepeaterMargin}}"
+                                   ItemsSource="{Binding Info.Comments, Mode=OneTime}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Spacing="5" />
+                        </ItemsRepeater.Layout>
+
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="5"
+                                        BorderBrush="{DynamicResource SeparatorBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                    <Grid RowDefinitions="Auto, Auto, Auto">
+                                        <Grid Grid.Row="0" ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, *, Auto">
+                                            <Grid.Styles>
+                                                <Style Selector="mi|MaterialIcon.Badge">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Width" Value="24" />
+                                                    <Setter Property="Height" Value="24" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource SeparatorBrush}" />
+                                                </Style>
+                                            </Grid.Styles>
+                                            <!--  Username  -->
+                                            <Button Grid.Column="0"
+                                                    Padding="5,0"
+                                                    VerticalAlignment="Center"
+                                                    Classes="accent"
+                                                    Command="{StaticResource OpenLinkCommand}"
+                                                    CommandParameter="{Binding User.Link}"
+                                                    Content="{Binding User.Name}"
+                                                    FontSize="16"
+                                                    IsEnabled="{Binding User.Href, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                            <!--  Username  -->
+
+                                            <!--  Icons  -->
+                                            <mi:MaterialIcon Grid.Column="1"
+                                                             Classes="Badge"
+                                                             IsVisible="{Binding IsUploader}"
+                                                             Kind="Upload"
+                                                             ToolTip.Tip="Uploader" />
+
+                                            <mi:MaterialIcon Grid.Column="2"
+                                                             Classes="Badge"
+                                                             IsVisible="{Binding User.IsAdmin}"
+                                                             Kind="Security"
+                                                             ToolTip.Tip="Administrator" />
+
+                                            <mi:MaterialIcon Grid.Column="3"
+                                                             Classes="Badge"
+                                                             IsVisible="{Binding User.IsTrusted}"
+                                                             Kind="CheckDecagram"
+                                                             ToolTip.Tip="Trusted" />
+
+                                            <mi:MaterialIcon Grid.Column="4"
+                                                             Classes="Badge"
+                                                             IsVisible="{Binding User.IsBanned}"
+                                                             Kind="AlertDecagram"
+                                                             ToolTip.Tip="Banned" />
+
+                                            <mi:MaterialIcon Grid.Column="5"
+                                                             HorizontalAlignment="Right"
+                                                             Classes="Badge"
+                                                             IsVisible="{Binding IsEdited}"
+                                                             Kind="Edit"
+                                                             ToolTip.Tip="{Binding EditedDate, StringFormat=(Edited) \{0:yyyy/MMM/dd hh:mm tt\}}" />
+                                            <!--  Icons  -->
+
+                                            <!--  Date  -->
+                                            <SelectableTextBlock Grid.Column="6"
+                                                                 Margin="2,0"
+                                                                 VerticalAlignment="Center"
+                                                                 Text="{Binding Date, StringFormat=\{0:yyyy/MMM/dd hh:mm tt\}}" />
+                                            <!--  Date  -->
+                                        </Grid>
+
+                                        <!--  Separator  -->
+                                        <Separator Grid.Row="1"
+                                                   Margin="0,5"
+                                                   Background="{DynamicResource SeparatorBrush}" />
+                                        <!--  Separator  -->
+
+                                        <!--  Comment Content  -->
+                                        <md:MarkdownScrollViewer Grid.Row="2"
+                                                                 Margin="5,0,0,0"
+                                                                 Initialized="SetHyperlinkCommand"
+                                                                 Markdown="{Binding Text}" />
+                                        <!--  Comment Content  -->
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </Expander>
+                <!--  Comments  -->
+            </Grid>
+        </ScrollViewer>
+        <!--  Information  -->
+
+        <!--  Scroll Top Button  -->
+        <Button Name="ScrollButton"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Margin="5,5,19,5"
+                Padding="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Classes="accent"
+                CornerRadius="24"
+                IsVisible="False"
+                ToolTip.Placement="TopEdgeAlignedRight"
+                ToolTip.Tip="Scroll To The Top">
+            <mi:MaterialIcon Width="24"
+                             Height="24"
+                             Kind="ArrowTop" />
+        </Button>
+        <!--  Scroll Top Button  -->
+
+        <Grid Grid.Row="0"
+              Grid.RowSpan="3"
+              VerticalAlignment="Center"
+              RowDefinitions="Auto, Auto, Auto">
+            <!--  No Info  -->
+            <mi:MaterialIcon Grid.Row="0"
+                             Width="128"
+                             Height="128"
+                             HorizontalAlignment="Center"
+                             Kind="Error">
+                <mi:MaterialIcon.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <MultiBinding.Bindings>
+                            <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                            <Binding Mode="OneWay" Path="NoInfo" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </mi:MaterialIcon.IsVisible>
+            </mi:MaterialIcon>
+
+            <TextBlock Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="Failed to retrieve the torrent information">
+                <TextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <MultiBinding.Bindings>
+                            <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                            <Binding Mode="OneWay" Path="NoInfo" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </TextBlock.IsVisible>
+            </TextBlock>
+
+            <Button Grid.Row="2"
+                    Margin="0,5,0,0"
+                    HorizontalAlignment="Center"
+                    Command="{Binding GetInfoCommand}">
+                <Button.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <MultiBinding.Bindings>
+                            <Binding Mode="OneWay" Path="!GetInfoCommand.IsRunning" />
+                            <Binding Mode="OneWay" Path="NoInfo" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </Button.IsVisible>
+
+                <Grid ColumnDefinitions="Auto, Auto">
+                    <mi:MaterialIcon Grid.Column="0"
+                                     Margin="0,0,5,0"
+                                     Kind="Reload" />
+                    <TextBlock Grid.Column="1" Text="Retry" />
+                </Grid>
+            </Button>
+            <!--  No Info  -->
+
+            <!--  Loading  -->
+            <mi:MaterialIcon Grid.Row="0"
+                             Width="128"
+                             Height="128"
+                             HorizontalAlignment="Center"
+                             Classes="Loading"
+                             IsVisible="{Binding GetInfoCommand.IsRunning, Mode=OneWay}" />
+
+            <TextBlock Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       IsVisible="{Binding GetInfoCommand.IsRunning, Mode=OneWay}"
+                       Text="Retrieving torrent information" />
+            <!--  Loading  -->
+        </Grid>
+    </Grid>
+</UserControl>

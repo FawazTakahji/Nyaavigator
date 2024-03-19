@@ -1,0 +1,216 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <CornerRadius x:Key="ScrollBarCornerRadius2xEx">0</CornerRadius>
+
+    <ControlTheme x:Key="ScrollBarEx" TargetType="ScrollBar">
+        <Setter Property="MinWidth" Value="{DynamicResource ScrollBarSize}" />
+        <Setter Property="MinHeight" Value="{DynamicResource ScrollBarSize}" />
+        <Setter Property="Background" Value="{DynamicResource ScrollBarBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ScrollBarForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ScrollBarBorderBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ScrollBarCornerRadius}" />
+
+        <Style Selector="^:vertical">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid x:Name="Root">
+                        <Border Name="VerticalRoot"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid RowDefinitions="Auto,*,Auto">
+
+                                <Rectangle Name="TrackRect"
+                                           Grid.RowSpan="3"
+                                           Margin="0"
+                                           Fill="{DynamicResource ScrollBarTrackFill}"
+                                           Opacity="0"
+                                           RadiusX="{Binding Source={StaticResource ScrollBarCornerRadius2xEx}, Converter={StaticResource TopLeftCornerRadiusToDoubleConv}}"
+                                           RadiusY="{Binding Source={StaticResource ScrollBarCornerRadius2xEx}, Converter={StaticResource TopLeftCornerRadiusToDoubleConv}}"
+                                           Stroke="{DynamicResource ScrollBarTrackStroke}"
+                                           StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}">
+                                    <Rectangle.Transitions>
+                                        <Transitions>
+                                            <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                                        </Transitions>
+                                    </Rectangle.Transitions>
+                                </Rectangle>
+
+                                <RepeatButton Name="PART_LineUpButton"
+                                              Grid.Row="0"
+                                              Height="{DynamicResource ScrollBarSize}"
+                                              MinWidth="{DynamicResource ScrollBarSize}"
+                                              HorizontalAlignment="Center"
+                                              Content="&#xEDDB;"
+                                              Focusable="False"
+                                              Interval="50"
+                                              Opacity="0"
+                                              Theme="{StaticResource ScrollBarLineButton}" />
+
+                                <Track Grid.Row="1"
+                                       IsDirectionReversed="True"
+                                       Maximum="{TemplateBinding Maximum}"
+                                       Minimum="{TemplateBinding Minimum}"
+                                       Orientation="{TemplateBinding Orientation}"
+                                       ViewportSize="{TemplateBinding ViewportSize}"
+                                       Value="{TemplateBinding Value,
+                                                               Mode=TwoWay}">
+                                    <Track.DecreaseButton>
+                                        <RepeatButton Name="PART_PageUpButton"
+                                                      Classes="largeChange"
+                                                      Focusable="False"
+                                                      Opacity="0"
+                                                      Theme="{StaticResource ScrollBarPageButton}" />
+                                    </Track.DecreaseButton>
+                                    <Track.IncreaseButton>
+                                        <RepeatButton Name="PART_PageDownButton"
+                                                      Classes="largeChange"
+                                                      Focusable="False"
+                                                      Opacity="0"
+                                                      Theme="{StaticResource ScrollBarPageButton}" />
+                                    </Track.IncreaseButton>
+                                    <Thumb Width="{StaticResource ScrollBarVerticalThumbMinWidth}"
+                                           MinHeight="{StaticResource ScrollBarVerticalThumbMinHeight}"
+                                           Background="{DynamicResource ScrollBarPanningThumbBackground}"
+                                           BorderBrush="{DynamicResource ScrollBarThumbBorderBrush}"
+                                           CornerRadius="{TemplateBinding CornerRadius}"
+                                           Opacity="1"
+                                           RenderTransformOrigin="100%,50%"
+                                           Theme="{StaticResource ScrollBarThumb}" />
+                                </Track>
+
+                                <RepeatButton Name="PART_LineDownButton"
+                                              Grid.Row="2"
+                                              Height="{DynamicResource ScrollBarSize}"
+                                              MinWidth="{DynamicResource ScrollBarSize}"
+                                              HorizontalAlignment="Center"
+                                              Content="&#xEDDC;"
+                                              Focusable="False"
+                                              Interval="50"
+                                              Opacity="0"
+                                              Theme="{StaticResource ScrollBarLineButton}" />
+
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^ /template/ Thumb">
+                <Setter Property="RenderTransform" Value="{DynamicResource VerticalSmallScrollThumbScaleTransform}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:horizontal">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid x:Name="Root">
+                        <Border Name="VerticalRoot"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                                <Rectangle Name="TrackRect"
+                                           Grid.ColumnSpan="3"
+                                           Margin="0"
+                                           Fill="{DynamicResource ScrollBarTrackFill}"
+                                           Opacity="0"
+                                           RadiusX="{Binding Source={StaticResource ScrollBarCornerRadius2xEx}, Converter={StaticResource TopLeftCornerRadiusToDoubleConv}}"
+                                           RadiusY="{Binding Source={StaticResource ScrollBarCornerRadius2xEx}, Converter={StaticResource TopLeftCornerRadiusToDoubleConv}}"
+                                           Stroke="{DynamicResource ScrollBarTrackStroke}"
+                                           StrokeThickness="{DynamicResource ScrollBarTrackBorderThemeThickness}">
+                                    <Rectangle.Transitions>
+                                        <Transitions>
+                                            <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                                        </Transitions>
+                                    </Rectangle.Transitions>
+                                </Rectangle>
+
+                                <RepeatButton Name="PART_LineUpButton"
+                                              Grid.Row="0"
+                                              Width="{DynamicResource ScrollBarSize}"
+                                              MinHeight="{DynamicResource ScrollBarSize}"
+                                              HorizontalAlignment="Center"
+                                              Content="&#xEDD9;"
+                                              Focusable="False"
+                                              Interval="50"
+                                              Opacity="0"
+                                              Theme="{StaticResource ScrollBarLineButton}" />
+
+                                <Track Grid.Column="1"
+                                       Maximum="{TemplateBinding Maximum}"
+                                       Minimum="{TemplateBinding Minimum}"
+                                       Orientation="{TemplateBinding Orientation}"
+                                       ViewportSize="{TemplateBinding ViewportSize}"
+                                       Value="{TemplateBinding Value,
+                                                               Mode=TwoWay}">
+                                    <Track.DecreaseButton>
+                                        <RepeatButton Name="PART_PageUpButton"
+                                                      Classes="largeChange"
+                                                      Focusable="False"
+                                                      Opacity="0"
+                                                      Theme="{StaticResource ScrollBarPageButton}" />
+                                    </Track.DecreaseButton>
+                                    <Track.IncreaseButton>
+                                        <RepeatButton Name="PART_PageDownButton"
+                                                      Classes="largeChange"
+                                                      Focusable="False"
+                                                      Opacity="0"
+                                                      Theme="{StaticResource ScrollBarPageButton}" />
+                                    </Track.IncreaseButton>
+                                    <Thumb Height="{DynamicResource ScrollBarHorizontalThumbMinHeight}"
+                                           MinWidth="{DynamicResource ScrollBarHorizontalThumbMinWidth}"
+                                           Background="{DynamicResource ScrollBarPanningThumbBackground}"
+                                           BorderBrush="{DynamicResource ScrollBarThumbBorderBrush}"
+                                           CornerRadius="{TemplateBinding CornerRadius}"
+                                           Opacity="1"
+                                           RenderTransformOrigin="50%,100%"
+                                           Theme="{StaticResource ScrollBarThumb}" />
+                                </Track>
+
+                                <RepeatButton Name="PART_LineDownButton"
+                                              Grid.Column="2"
+                                              Height="{DynamicResource ScrollBarSize}"
+                                              MinWidth="{DynamicResource ScrollBarSize}"
+                                              HorizontalAlignment="Center"
+                                              Content="&#xEDDA;"
+                                              Focusable="False"
+                                              Interval="50"
+                                              Opacity="0"
+                                              Theme="{StaticResource ScrollBarLineButton}" />
+
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^ /template/ Thumb">
+                <Setter Property="RenderTransform" Value="{DynamicResource HorizontalSmallScrollThumbScaleTransform}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[IsExpanded=true]">
+            <Style Selector="^ /template/ Grid#Root">
+                <Setter Property="Background" Value="{DynamicResource ScrollBarBackgroundPointerOver}" />
+            </Style>
+            <Style Selector="^ /template/ Rectangle#TrackRect">
+                <Setter Property="Fill" Value="{DynamicResource ScrollBarTrackFillPointerOver}" />
+                <Setter Property="Stroke" Value="{DynamicResource ScrollBarTrackStrokePointerOver}" />
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ Thumb">
+                <Setter Property="RenderTransform" Value="none" />
+                <Setter Property="Background" Value="{DynamicResource ScrollBarThumbBackground}" />
+            </Style>
+            <Style Selector="^ /template/ RepeatButton">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:disabled /template/ Grid#Root">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

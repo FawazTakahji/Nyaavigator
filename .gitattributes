@@ -1,0 +1,2 @@
+/src/Nyaavigator.Deb/Generate.sh text eol=lf
+/src/Nyaavigator/Publish.sh text eol=lf

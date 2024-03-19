@@ -1,0 +1,583 @@
+﻿<Window x:Class="Nyaavigator.Views.WindowView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+        xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
+        xmlns:vs="clr-namespace:Nyaavigator.Views"
+        Title="Nyaavigator"
+        MinWidth="{OnPlatform Default=804, Windows=770}"
+        MinHeight="510"
+        x:DataType="vms:WindowViewModel"
+        Icon="/Assets/Icon.ico"
+        mc:Ignorable="d">
+    <Design.DataContext>
+        <vms:WindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto, Auto, Auto">
+        <!--  Header  -->
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Margin="0,5,0,0"
+              ColumnDefinitions="Auto, Auto, Auto, *, Auto, Auto">
+            <!--  Settings Button  -->
+            <Button Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="2,0,1,0"
+                    VerticalAlignment="Stretch"
+                    Content="{mi:MaterialIconExt Cogs, Size=20}">
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft">
+                        <vs:SettingsView />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <!--  Settings Button  -->
+
+            <!--  Filters Combobox  -->
+            <ComboBox Grid.Row="0"
+                      Grid.Column="1"
+                      MinWidth="{OnPlatform Default=133, Windows=122}"
+                      Margin="1,0"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      DisplayMemberBinding="{Binding Title}"
+                      ItemsSource="{Binding Filters, Mode=OneTime}"
+                      SelectedItem="{Binding SelectedFilter}" />
+            <!--  Filters Combobox  -->
+
+            <!--  Categories Combobox  -->
+            <DropDownButton Grid.Row="0"
+                            Grid.Column="2"
+                            MinWidth="{OnPlatform Default=186, Windows=173}"
+                            Margin="1,0"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Content="{Binding SelectedCategory.SelectedTitle}">
+                <DropDownButton.Styles>
+                    <Style Selector="FlyoutPresenter">
+                        <Setter Property="Padding" Value="3" />
+                    </Style>
+                </DropDownButton.Styles>
+                <DropDownButton.Flyout>
+                    <Flyout Placement="Bottom" PlacementConstraintAdjustment="SlideY, SlideX">
+                        <TreeView MinWidth="{OnPlatform Default=234, Windows=222}"
+                                  ItemsSource="{Binding Categories, Mode=OneTime}"
+                                  SelectedItem="{Binding SelectedCategory}">
+                            <TreeView.ItemTemplate>
+                                <TreeDataTemplate ItemsSource="{Binding SubCategories, Mode=OneTime}">
+                                    <TextBlock Text="{Binding Title}" />
+                                </TreeDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </Flyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+            <!--  Categories Combobox  -->
+
+            <!--  Search Bar  -->
+            <TextBox Grid.Row="0"
+                     Grid.Column="3"
+                     Margin="1,0"
+                     HorizontalAlignment="Stretch"
+                     Classes="clearButton"
+                     KeyDown="SearchBarKeys"
+                     Text="{Binding SearchQuery}"
+                     Watermark="Search" />
+            <!--  Search Bar  -->
+
+            <!--  Sorting Button  -->
+            <Button Grid.Row="0"
+                    Grid.Column="4"
+                    Margin="1,0"
+                    VerticalAlignment="Stretch"
+                    Content="{mi:MaterialIconExt SortVariant, Size=20}">
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedRight">
+                        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                            <Grid.Styles>
+                                <Style Selector="StackPanel">
+                                    <Setter Property="Orientation" Value="Horizontal" />
+                                    <Setter Property="Spacing" Value="5" />
+                                </Style>
+                            </Grid.Styles>
+                            <TextBox Grid.Row="0"
+                                     Margin="0,0,0,10"
+                                     Classes="clearButton"
+                                     Text="{Binding Username}"
+                                     Watermark="Username" />
+                            <StackPanel Grid.Row="2">
+                                <ToggleButton Content="Seeders" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=seeders}" />
+                                <ToggleButton Content="Leechers" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=leechers}" />
+                                <ToggleButton Content="Size" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=size}" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="3" Margin="0,5">
+                                <ToggleButton Content="Downloads" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=downloads}" />
+                                <ToggleButton Content="Comments" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=comments}" />
+                                <ToggleButton Content="Date" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=id}" />
+                            </StackPanel>
+                            <Separator Grid.Row="4"
+                                       Margin="0,0,0,5"
+                                       Background="{DynamicResource SeparatorBrush}" />
+                            <StackPanel Grid.Row="5">
+                                <ToggleButton Content="Ascending" IsChecked="{Binding SelectedOrder, Converter={StaticResource StringParameterBool}, ConverterParameter=asc}" />
+                                <ToggleButton Content="Descending" IsChecked="{Binding SelectedOrder, Converter={StaticResource StringParameterBool}, ConverterParameter=desc}" />
+                            </StackPanel>
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <!--  Sorting Button  -->
+
+            <!--  Search Button  -->
+            <Button Name="SearchButton"
+                    Grid.Row="0"
+                    Grid.Column="5"
+                    Margin="1,0,2,0"
+                    VerticalAlignment="Stretch"
+                    Command="{Binding SearchCommand}"
+                    Content="{mi:MaterialIconExt Search, Size=20}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <MultiBinding.Bindings>
+                            <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
+                            <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
+            <!--  Search Button  -->
+        </Grid>
+        <!--  Header  -->
+
+        <!--  Results  -->
+        <DataGrid Name="DataGrid"
+                  Grid.Row="1"
+                  Grid.Column="0"
+                  Margin="0,5,0,0"
+                  CellTheme="{StaticResource DataGridCellEx}"
+                  IsVisible="{Binding Torrents.Count, Mode=OneWay}"
+                  ItemsSource="{Binding Torrents}"
+                  RowTheme="{StaticResource DataGridRowEx}"
+                  Theme="{StaticResource DataGridEx}">
+            <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader /template/ ContentPresenter">
+                    <!--  Header content over sort icon.  -->
+                    <Setter Property="Grid.ColumnSpan" Value="2" />
+                </Style>
+                <Style Selector="DataGridCell.Padding">
+                    <Setter Property="Padding" Value="5,0" />
+                </Style>
+                <Style Selector="DataGrid#DataGrid /template/ ScrollBar#PART_VerticalScrollbar">
+                    <Setter Property="Theme" Value="{StaticResource ScrollBarEx}" />
+                </Style>
+                <Style Selector="mi|MaterialIcon.HeaderIcon">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Margin" Value="-12,0,0,0" />
+                </Style>
+                <Style Selector="ToolTip">
+                    <Setter Property="MaxWidth" Value="500" />
+                </Style>
+            </DataGrid.Styles>
+
+            <DataGrid.Columns>
+                <!--  CheckBox  -->
+                <DataGridTemplateColumn Width="30"
+                                        MaxWidth="30"
+                                        CellStyleClasses="Padding">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <CheckBox Margin="-7,0,0,0"
+                                      Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckIsAllSelectedCommand}"
+                                      IsChecked="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).IsAllSelected}"
+                                      IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckSelectedCommand}"
+                                      IsChecked="{Binding IsSelected}"
+                                      IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  CheckBox  -->
+
+                <!--  Category  -->
+                <DataGridTemplateColumn Width="Auto"
+                                        MaxWidth="80"
+                                        Header="Category">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="80"
+                                   Height="28"
+                                   Margin="0,5"
+                                   Source="{Binding Category, Mode=OneWay, Converter={StaticResource CategoryIconStringToBitmap}}"
+                                   ToolTip.Tip="{Binding Category, Mode=OneWay, Converter={StaticResource CategoryIconStringToDescription}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Category  -->
+
+                <!--  Name  -->
+                <DataGridTemplateColumn Width="*"
+                                        CellStyleClasses="Padding"
+                                        Header="Name">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <!--  Text  -->
+                                <SelectableTextBlock Grid.Column="0"
+                                                     Classes="CellText"
+                                                     Text="{Binding Name, Mode=OneWay}"
+                                                     ToolTip.Tip="{Binding Name, Mode=OneWay}" />
+                                <!--  Text  -->
+
+                                <!--  Comments And Menu  -->
+                                <SplitButton Grid.Column="1"
+                                             Height="29"
+                                             MinHeight="0"
+                                             Margin="5,0,0,0"
+                                             Padding="5"
+                                             Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).ShowMoreInfoCommand}"
+                                             CommandParameter="{Binding Link, Mode=OneWay}">
+                                    <SplitButton.Styles>
+                                        <Style Selector="SplitButton /template/ Button#PART_PrimaryButton">
+                                            <Setter Property="IsVisible" Value="{Binding Comments, Mode=OneWay}" />
+                                            <Setter Property="ToolTip.Tip" Value="Comments" />
+                                        </Style>
+                                    </SplitButton.Styles>
+                                    <SplitButton.Resources>
+                                        <x:Double x:Key="SplitButtonSecondaryButtonSize">17</x:Double>
+                                    </SplitButton.Resources>
+
+                                    <!--  Comments  -->
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <mi:MaterialIcon Margin="{OnPlatform Default=0, Windows='0,0,0,-1'}"
+                                                         VerticalAlignment="Center"
+                                                         Kind="Comments" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comments, Mode=OneWay}" />
+                                    </StackPanel>
+                                    <!--  Comments  -->
+
+                                    <!--  Menu  -->
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Command="{StaticResource OpenLinkCommand}"
+                                                      CommandParameter="{Binding Link, Mode=OneWay}"
+                                                      Header="Open in Browser"
+                                                      Icon="{mi:MaterialIconExt OpenInApp}" />
+                                            <MenuItem Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).ShowMoreInfoCommand}"
+                                                      CommandParameter="{Binding Link, Mode=OneWay}"
+                                                      Header="More Info"
+                                                      Icon="{mi:MaterialIconExt FileDocumentOutline}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                    <!--  Menu  -->
+                                </SplitButton>
+                                <!--  Comments And Menu  -->
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Name  -->
+
+                <!--  Links  -->
+                <DataGridTemplateColumn Width="Auto"
+                                        MaxWidth="85"
+                                        Header="Links">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center" ColumnDefinitions="Auto, Auto">
+                                <Button Grid.Column="0"
+                                        Margin="0,0,5,0"
+                                        Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentCommand}"
+                                        CommandParameter="{Binding Mode=OneWay}"
+                                        Content="{mi:MaterialIconExt Download}"
+                                        IsEnabled="{Binding !IsDownloading, Mode=OneWay}" />
+                                <Button Grid.Column="1"
+                                        Command="{StaticResource OpenLinkCommand}"
+                                        CommandParameter="{Binding Magnet, Mode=OneWay}"
+                                        Content="{mi:MaterialIconExt Magnet}" />
+                                <ProgressBar Grid.Column="0"
+                                             Grid.ColumnSpan="2"
+                                             MinWidth="0"
+                                             VerticalAlignment="Bottom"
+                                             IsIndeterminate="True"
+                                             IsVisible="{Binding IsDownloading, Mode=OneWay}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Links  -->
+
+                <!--  Size  -->
+                <DataGridTemplateColumn Width="Auto"
+                                        CellStyleClasses="Padding"
+                                        Header="Size">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding Size, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Size  -->
+
+                <!--  Date  -->
+                <DataGridTemplateColumn Width="Auto" Header="Date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding Date, StringFormat=\{0:yyyy/M/dd hh:mm tt\}, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Date  -->
+
+                <!--  Seeders  -->
+                <DataGridTemplateColumn Width="Auto" CellStyleClasses="Padding">
+                    <DataGridTemplateColumn.Header>
+                        <mi:MaterialIcon Classes="HeaderIcon"
+                                         Kind="ChevronTripleUp"
+                                         ToolTip.Tip="Seeders" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding Seeders, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Seeders  -->
+
+                <!--  Leechers  -->
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.Header>
+                        <mi:MaterialIcon Classes="HeaderIcon"
+                                         Kind="ChevronTripleDown"
+                                         ToolTip.Tip="Leechers" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding Leechers, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Leechers  -->
+
+                <!--  Downloads  -->
+                <DataGridTemplateColumn Width="Auto" CellStyleClasses="Padding">
+                    <DataGridTemplateColumn.Header>
+                        <mi:MaterialIcon Classes="HeaderIcon"
+                                         Kind="Check"
+                                         ToolTip.Tip="Downloads" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding Downloads, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Downloads  -->
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--  Results  -->
+
+        <!--  Separator  -->
+        <Separator Grid.Row="2"
+                   Grid.Column="0"
+                   Background="{DynamicResource SeparatorBrush}">
+            <Separator.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <MultiBinding.Bindings>
+                        <Binding Mode="OneWay" Path="!!Torrents.Count" />
+                        <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
+                        <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Separator.IsVisible>
+        </Separator>
+        <!--  Separator  -->
+
+        <!--  Downloading Indicator  -->
+        <ProgressBar Grid.Row="2"
+                     Grid.Column="0"
+                     Height="1"
+                     Margin="0,0,0,1"
+                     IsIndeterminate="True">
+            <ProgressBar.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                    <MultiBinding.Bindings>
+                        <Binding Mode="OneWay" Path="DownloadTorrentCommand.IsRunning" />
+                        <Binding Mode="OneWay" Path="DownloadTorrentsCommand.IsRunning" />
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </ProgressBar.IsVisible>
+        </ProgressBar>
+        <!--  Downloading Indicator  -->
+
+        <!--  Buttons And Results Text  -->
+        <Grid Grid.Row="3"
+              Margin="0,5"
+              HorizontalAlignment="Center"
+              ColumnDefinitions="Auto, *, Auto"
+              IsVisible="{Binding Torrents.Count, Mode=OneWay}">
+            <!--  Download Button  -->
+            <Button Grid.Column="0"
+                    Margin="5,0"
+                    Command="{Binding DownloadTorrentsCommand, Converter={StaticResource BoolToCommand}}"
+                    IsEnabled="{Binding IsAllSelected}">
+
+                <Grid ColumnDefinitions="Auto, Auto">
+                    <mi:MaterialIcon Grid.Column="0"
+                                     Margin="0,0,5,0"
+                                     Kind="{Binding DownloadTorrentsCommand.IsRunning, Converter={StaticResource DownloadsButtonBoolToContent}, Mode=OneWay}" />
+                    <TextBlock Grid.Column="1"
+                               MinWidth="{OnPlatform Default=135, Windows=120}"
+                               Text="{Binding DownloadTorrentsCommand.IsRunning, Converter={StaticResource DownloadsButtonBoolToContent}, Mode=OneWay}" />
+                </Grid>
+            </Button>
+            <!--  Download Button  -->
+
+            <!--  Results Text  -->
+            <Border Grid.Column="1"
+                    MinWidth="{DynamicResource TextControlThemeMinWidth}"
+                    MinHeight="{DynamicResource TextControlThemeMinHeight}"
+                    Padding="{DynamicResource TextControlThemePadding}"
+                    HorizontalAlignment="Center"
+                    Background="{DynamicResource TextControlBackgroundDisabled}"
+                    BorderBrush="{DynamicResource TextControlBorderBrushDisabled}"
+                    BorderThickness="{DynamicResource TextControlBorderThemeThickness}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}"
+                    IsVisible="{Binding ResultsString, Mode=OneWay, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    ToolTip.Placement="Top"
+                    ToolTip.Tip="{Binding ResultsString, Mode=OneWay}">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding ResultsString, Mode=OneWay}"
+                           TextTrimming="CharacterEllipsis" />
+            </Border>
+            <!--  Results Text  -->
+
+            <!--  Magnets Button  -->
+            <Button Grid.Column="2"
+                    Margin="5,0"
+                    Command="{Binding OpenMagnetsCommand}"
+                    IsEnabled="{Binding IsAllSelected}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <mi:MaterialIcon Kind="Magnet" />
+                    <TextBlock Text="Open Selected" />
+                </StackPanel>
+            </Button>
+            <!--  Magnets Button  -->
+        </Grid>
+        <!--  Buttons And Results Text  -->
+
+        <!--  Pages Buttons  -->
+        <ItemsRepeater Grid.Row="4"
+                       Margin="5,0,5,5"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding Torrents.Count, Mode=OneWay}"
+                       ItemsSource="{Binding Pages, Mode=OneWay}">
+            <ItemsRepeater.Styles>
+                <Style Selector="Button.accent:disabled">
+                    <Style Selector="^ /template/ ui|FABorder#Root">
+                        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
+                    </Style>
+                    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+                    </Style>
+                </Style>
+            </ItemsRepeater.Styles>
+
+            <ItemsRepeater.Layout>
+                <StackLayout Orientation="Horizontal" Spacing="5" />
+            </ItemsRepeater.Layout>
+
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <Button Width="{OnPlatform Default=42, Windows=40}"
+                            Height="{OnPlatform Default=30, Windows=32}"
+                            Classes.accent="{Binding IsActive, Mode=OneWay}"
+                            Command="{Binding $parent[ItemsRepeater].((vms:WindowViewModel)DataContext).SearchCommand}"
+                            CommandParameter="{Binding Href, Mode=OneWay}"
+                            Content="{Binding Content, Mode=OneWay}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <MultiBinding.Bindings>
+                                    <Binding Mode="OneWay" Path="IsEnabled" />
+                                    <Binding Mode="OneWay" Path="!$parent[ItemsRepeater].((vms:WindowViewModel)DataContext).DownloadTorrentCommand.IsRunning" />
+                                    <Binding Mode="OneWay" Path="!$parent[ItemsRepeater].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+        <!--  Pages Buttons  -->
+
+        <!--  Searching Indicator  -->
+        <Grid Grid.Row="1"
+              Grid.RowSpan="4"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              IsVisible="{Binding SearchCommand.IsRunning, Mode=OneWay}"
+              RowDefinitions="Auto, Auto">
+            <mi:MaterialIcon Grid.Row="0"
+                             Width="128"
+                             Height="128"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Classes="Loading" />
+            <TextBlock Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Text="Searching" />
+            <Button Grid.Row="1"
+                    Margin="0,5,0,0"
+                    Command="{Binding SearchCancelCommand}">
+                <Grid ColumnDefinitions="Auto, Auto">
+                    <mi:MaterialIcon Grid.Column="0"
+                                     Margin="0,0,5,0"
+                                     Kind="Cancel" />
+                    <TextBlock Grid.Column="1" Text="Cancel Search" />
+                </Grid>
+            </Button>
+        </Grid>
+        <!--  Searching Indicator  -->
+
+        <!--  Background  -->
+        <Image Grid.Row="1"
+               Grid.RowSpan="4"
+               Width="256"
+               Height="256"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Opacity="0.5"
+               Source="../Assets/Background.png">
+            <Image.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <MultiBinding.Bindings>
+                        <Binding Mode="OneWay" Path="!Torrents.Count" />
+                        <Binding Mode="OneWay" Path="!SearchCommand.IsRunning" />
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Image.IsVisible>
+        </Image>
+        <!--  Background  -->
+    </Grid>
+</Window>

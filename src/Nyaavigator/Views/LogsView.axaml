@@ -1,0 +1,124 @@
+﻿<Window x:Class="Nyaavigator.Views.LogsView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
+        Title="Logs Viewer"
+        d:DesignHeight="450"
+        d:DesignWidth="800"
+        x:DataType="vms:LogsViewModel"
+        Icon="/Assets/Icon.ico"
+        mc:Ignorable="d">
+    <Design.DataContext>
+        <vms:LogsViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*, Auto, Auto">
+        <DataGrid Name="DataGrid"
+                  Grid.Row="0"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CellTheme="{StaticResource DataGridCellEx}"
+                  ItemsSource="{Binding CollectionTarget.Logs}"
+                  RowTheme="{StaticResource DataGridRowEx}"
+                  Theme="{StaticResource DataGridEx}">
+            <DataGrid.Styles>
+                <Style Selector="DataGrid /template/ ScrollBar#PART_VerticalScrollbar">
+                    <Setter Property="Theme" Value="{StaticResource ScrollBarEx}" />
+                </Style>
+                <Style Selector="DataGridCell.Padding">
+                    <Setter Property="Padding" Value="5,0" />
+                </Style>
+                <Style Selector="ToolTip">
+                    <Setter Property="MaxWidth" Value="500" />
+                </Style>
+            </DataGrid.Styles>
+
+            <DataGrid.Columns>
+                <!--  Time  -->
+                <DataGridTemplateColumn Width="Auto"
+                                        CellStyleClasses="Padding"
+                                        Header="Time">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock HorizontalAlignment="Center"
+                                                 Classes="CellText"
+                                                 Text="{Binding TimeStamp, StringFormat=\{0:yyyy/M/dd hh:mm tt\}, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Time  -->
+
+                <!--  Level  -->
+                <DataGridTemplateColumn Width="Auto" Header="Level">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <mi:MaterialIcon Width="24"
+                                             Height="24"
+                                             Background="Transparent"
+                                             Foreground="{Binding Level.Ordinal, Converter={StaticResource LevelToBrush}, Mode=OneWay}"
+                                             Kind="{Binding Level.Ordinal, Converter={StaticResource LevelToIcon}, Mode=OneWay}"
+                                             ToolTip.Tip="{Binding Level.Name, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Level  -->
+
+                <!--  Message  -->
+                <DataGridTemplateColumn Width="4*"
+                                        CellStyleClasses="Padding"
+                                        Header="Message">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock Classes="CellText"
+                                                 Text="{Binding FormattedMessage, Mode=OneWay}"
+                                                 ToolTip.Tip="{Binding FormattedMessage, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Message  -->
+
+                <!--  Exception  -->
+                <DataGridTemplateColumn Width="4*" Header="Exception">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock Classes="CellText"
+                                                 Text="{Binding Exception.Message, Mode=OneWay}"
+                                                 ToolTip.Tip="{Binding Exception.Message, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Exception  -->
+
+                <!--  Logger Name  -->
+                <DataGridTemplateColumn Width="2*"
+                                        CellStyleClasses="Padding"
+                                        Header="Logger Name">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <SelectableTextBlock Classes="CellText"
+                                                 Text="{Binding LoggerName, Mode=OneWay}"
+                                                 ToolTip.Tip="{Binding LoggerName, Mode=OneWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--  Logger Name  -->
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Separator Grid.Row="1" Background="{DynamicResource SeparatorBrush}" />
+
+        <Button Grid.Row="2"
+                Margin="5"
+                HorizontalAlignment="Left"
+                Command="{Binding ExportCommand}"
+                IsEnabled="{Binding CollectionTarget.Logs.Count, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <mi:MaterialIcon Kind="TableArrowRight" />
+                <TextBlock Text="Export" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>

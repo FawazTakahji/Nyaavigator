@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
+
+    <Style Selector="mi|MaterialIcon.Loading">
+        <Setter Property="Kind" Value="Loading" />
+
+        <Style.Animations>
+            <Animation IterationCount="INFINITE" Duration="0:0:0.75">
+                <KeyFrame Cue="0%">
+                    <Setter Property="RotateTransform.Angle" Value="0.0" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="RotateTransform.Angle" Value="360.0" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+</Styles>

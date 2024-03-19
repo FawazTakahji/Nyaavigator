@@ -1,0 +1,68 @@
+<Application x:Class="Nyaavigator.App"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:commands="clr-namespace:Nyaavigator.Commands"
+             xmlns:converters="clr-namespace:Nyaavigator.Converters"
+             xmlns:converters.CategoryIcon="clr-namespace:Nyaavigator.Converters.CategoryIcon"
+             xmlns:converters.DownloadsButton="clr-namespace:Nyaavigator.Converters.DownloadsButton"
+             xmlns:converters.Level="clr-namespace:Nyaavigator.Converters.Level"
+             xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:sty="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia">
+
+    <Application.Styles>
+        <sty:FluentAvaloniaTheme />
+        <mi:MaterialIconStyles />
+        <StyleInclude Source="Resources/Styles/ExpandedScrollBar.axaml" />
+        <StyleInclude Source="Resources/Styles/LoadingAnimation.axaml" />
+
+        <Style Selector="ctxt|CHyperlink">
+            <Setter Property="Foreground" Value="{DynamicResource HyperlinkButtonForeground}" />
+        </Style>
+
+        <Style Selector="SelectableTextBlock">
+            <Setter Property="SelectionBrush" Value="{DynamicResource SystemAccentColor}" />
+        </Style>
+        <Style Selector="SelectableTextBlock.CellText">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style Selector="ui|HyperlinkButton.Inline">
+            <Setter Property="Margin" Value="0,-1,0,0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </Application.Styles>
+
+    <Application.Resources>
+        <!--  Themes  -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="../Resources/Themes/DataGridEx.axaml" />
+                <ResourceInclude Source="../Resources/Themes/DataGridRowEx.axaml" />
+                <ResourceInclude Source="../Resources/Themes/DataGridCellEx.axaml" />
+                <ResourceInclude Source="../Resources/Themes/ScrollBarEx.axaml" />
+                <ResourceInclude Source="../Resources/ThemeResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <!--  Themes  -->
+
+        <!--  Converters  -->
+        <converters.Level:LevelToIcon x:Key="LevelToIcon" />
+        <converters.Level:LevelToBrush x:Key="LevelToBrush" />
+        <converters:StringParameterBool x:Key="StringParameterBool" />
+        <converters.CategoryIcon:StringToBitmap x:Key="CategoryIconStringToBitmap" />
+        <converters.CategoryIcon:StringToDescription x:Key="CategoryIconStringToDescription" />
+        <converters.DownloadsButton:BoolToContent x:Key="DownloadsButtonBoolToContent" />
+        <converters:BoolToCommand x:Key="BoolToCommand" />
+        <converters:LinkIsValid x:Key="LinkIsValid" />
+        <converters:LinkIsNotValid x:Key="LinkIsNotValid" />
+        <converters:RepeaterMargin x:Key="RepeaterMargin" />
+        <!--  Converters  -->
+
+        <!--  Commands  -->
+        <commands:OpenLinkCommand x:Key="OpenLinkCommand" />
+        <!--  Commands  -->
+    </Application.Resources>
+</Application>

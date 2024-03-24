@@ -1,5 +1,5 @@
 #define MyAppName "Nyaavigator"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "FawazT"
 #define MyAppURL "https://github.com/FawazTakhji/Nyaavigator"
 #define MyAppExeName "Nyaavigator.exe"

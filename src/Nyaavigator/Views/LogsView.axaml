@@ -6,10 +6,13 @@
         xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
         Title="Logs Viewer"
+        MinWidth="{OnPlatform Default=804, Windows=770}"
+        MinHeight="510"
         d:DesignHeight="450"
         d:DesignWidth="800"
         x:DataType="vms:LogsViewModel"
         Icon="/Assets/Icon.ico"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d">
     <Design.DataContext>
         <vms:LogsViewModel />

@@ -1,10 +1,12 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Messages;
+using Nyaavigator.Models;
 using Nyaavigator.ViewModels;
 
 namespace Nyaavigator.Views;
@@ -56,5 +58,19 @@ public partial class WindowView : Window, IRecipient<NotificationMessage>
         {
             ((TextBox)sender).Text = string.Empty;
         }
+    }
+
+    private void DataGrid_DoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Source is not IDataContextProvider { DataContext: Torrent torrent } || this.DataContext is not WindowViewModel viewModel)
+            return;
+
+        if (viewModel.ShowMoreInfoCommand.CanExecute(null))
+            viewModel.ShowMoreInfoCommand.Execute(torrent.Link);
+    }
+
+    private void DoubleTapBlock(object? sender, TappedEventArgs e)
+    {
+        e.Handled = true;
     }
 }

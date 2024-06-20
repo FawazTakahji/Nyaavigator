@@ -160,6 +160,7 @@
                   Grid.Column="0"
                   Margin="0,5,0,0"
                   CellTheme="{StaticResource DataGridCellEx}"
+                  DoubleTapped="DataGrid_DoubleTapped"
                   IsVisible="{Binding Torrents.Count, Mode=OneWay}"
                   ItemsSource="{Binding Torrents}"
                   RowTheme="{StaticResource DataGridRowEx}"
@@ -200,6 +201,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckSelectedCommand}"
+                                      DoubleTapped="DoubleTapBlock"
                                       IsChecked="{Binding IsSelected}"
                                       IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}" />
                         </DataTemplate>
@@ -233,6 +235,7 @@
                                 <!--  Text  -->
                                 <SelectableTextBlock Grid.Column="0"
                                                      Classes="CellText"
+                                                     DoubleTapped="DoubleTapBlock"
                                                      Text="{Binding Name, Mode=OneWay}"
                                                      ToolTip.Tip="{Binding Name, Mode=OneWay}" />
                                 <!--  Text  -->
@@ -244,7 +247,8 @@
                                              Margin="5,0,0,0"
                                              Padding="5"
                                              Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).ShowMoreInfoCommand}"
-                                             CommandParameter="{Binding Link, Mode=OneWay}">
+                                             CommandParameter="{Binding Link, Mode=OneWay}"
+                                             DoubleTapped="DoubleTapBlock">
                                     <SplitButton.Styles>
                                         <Style Selector="SplitButton /template/ Button#PART_PrimaryButton">
                                             <Setter Property="IsVisible" Value="{Binding Comments, Mode=OneWay}" />
@@ -298,11 +302,13 @@
                                         Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentCommand}"
                                         CommandParameter="{Binding Mode=OneWay}"
                                         Content="{mi:MaterialIconExt Download}"
+                                        DoubleTapped="DoubleTapBlock"
                                         IsEnabled="{Binding !IsDownloading, Mode=OneWay}" />
                                 <Button Grid.Column="1"
                                         Command="{StaticResource OpenLinkCommand}"
                                         CommandParameter="{Binding Magnet, Mode=OneWay}"
-                                        Content="{mi:MaterialIconExt Magnet}" />
+                                        Content="{mi:MaterialIconExt Magnet}"
+                                        DoubleTapped="DoubleTapBlock" />
                                 <ProgressBar Grid.Column="0"
                                              Grid.ColumnSpan="2"
                                              MinWidth="0"
@@ -323,6 +329,7 @@
                         <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
+                                                 DoubleTapped="DoubleTapBlock"
                                                  Text="{Binding Size, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -335,6 +342,7 @@
                         <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
+                                                 DoubleTapped="DoubleTapBlock"
                                                  Text="{Binding Date, StringFormat=\{0:yyyy/M/dd hh:mm tt\}, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -352,6 +360,7 @@
                         <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
+                                                 DoubleTapped="DoubleTapBlock"
                                                  Text="{Binding Seeders, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -369,6 +378,7 @@
                         <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
+                                                 DoubleTapped="DoubleTapBlock"
                                                  Text="{Binding Leechers, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -386,6 +396,7 @@
                         <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
+                                                 DoubleTapped="DoubleTapBlock"
                                                  Text="{Binding Downloads, Mode=OneWay}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

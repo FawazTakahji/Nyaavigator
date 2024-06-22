@@ -15,9 +15,9 @@ using Nyaavigator.Enums;
 using Nyaavigator.Models;
 using Nyaavigator.Utilities;
 using Nyaavigator.Builders;
+using Nyaavigator.Services;
 using Nyaavigator.Views;
 using NotificationType = Avalonia.Controls.Notifications.NotificationType;
-using Settings = Nyaavigator.Models.Settings;
 
 namespace Nyaavigator.ViewModels;
 
@@ -48,7 +48,7 @@ public partial class WindowViewModel : ObservableObject
 
     [ObservableProperty]
     private DataGridCollectionView _torrentsView;
-    public Settings AppSettings { get; }
+    public SettingsService SettingsService { get; }
 
     public WindowViewModel()
     {
@@ -56,7 +56,7 @@ public partial class WindowViewModel : ObservableObject
         SelectedCategory = Categories[0];
 
         // TODO: settings should be its own service
-        AppSettings = App.ServiceProvider.GetRequiredService<SettingsViewModel>().AppSettings;
+        SettingsService = App.ServiceProvider.GetRequiredService<SettingsService>();
 
         DownloadTorrentsCommand.PropertyChanged += (_, e) =>
         {
@@ -66,7 +66,7 @@ public partial class WindowViewModel : ObservableObject
 
         TorrentsView = new DataGridCollectionView(Torrents, true, true)
         {
-            Filter = item => !AppSettings.HideTorrentsWithNoSeeders || ((Torrent)item).Seeders != "0"
+            Filter = item => !SettingsService.AppSettings.HideTorrentsWithNoSeeders || ((Torrent)item).Seeders != "0"
         };
 
         TorrentsView.CollectionChanged += (_, _) =>
@@ -74,7 +74,7 @@ public partial class WindowViewModel : ObservableObject
             CheckIsAllSelectedCommand.NotifyCanExecuteChanged();
         };
 
-        AppSettings.PropertyChanged += OnHideTorrentsChanged;
+        SettingsService.AppSettings.PropertyChanged += OnHideTorrentsChanged;
 
 #if DEBUG
         Dispatcher.UIThread.InvokeAsync(CreateDebugItems);
@@ -83,7 +83,7 @@ public partial class WindowViewModel : ObservableObject
 
     private void OnHideTorrentsChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(AppSettings.HideTorrentsWithNoSeeders))
+        if (e.PropertyName != nameof(SettingsService.AppSettings.HideTorrentsWithNoSeeders))
             return;
 
         TorrentsView.Refresh();

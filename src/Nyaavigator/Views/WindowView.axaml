@@ -131,7 +131,7 @@
                                        Background="{DynamicResource SeparatorBrush}" />
                             <CheckBox Grid.Row="7"
                                       Content="Hide torrents with no seeders"
-                                      IsChecked="{Binding AppSettings.HideTorrentsWithNoSeeders}">
+                                      IsChecked="{Binding SettingsService.AppSettings.HideTorrentsWithNoSeeders}">
                                 <CheckBox.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <MultiBinding.Bindings>

@@ -6,30 +6,23 @@ using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.Core;
 using Nyaavigator.Enums;
 using Nyaavigator.Extensions;
+using Nyaavigator.Services;
 using Nyaavigator.Utilities;
 using Nyaavigator.Views;
-using Settings = Nyaavigator.Utilities.Settings;
 
 namespace Nyaavigator.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private Models.Settings _appSettings = Settings.LoadSettings();
+    public SettingsService SettingsService { get; }
     [ObservableProperty]
     private Array _themeEnums = Enum.GetValues(typeof(Theme));
     [ObservableProperty]
     private string _currentVersion = $"v{typeof(SettingsViewModel).Assembly.GetName().Version!.GetMajorMinorBuild().ToString()}";
 
-    public SettingsViewModel()
+    public SettingsViewModel(SettingsService settingsService)
     {
-        Settings.ApplySettings(AppSettings);
-
-        AppSettings.PropertyChanged += (_, _) =>
-        {
-            Settings.ApplySettings(AppSettings);
-            Settings.SaveSettings(AppSettings);
-        };
+        SettingsService = settingsService;
     }
 
     [RelayCommand]
@@ -59,4 +52,11 @@ public partial class SettingsViewModel : ObservableObject
     {
         await Updates.CheckUpdate(true);
     }
+
+#if DEBUG
+    public SettingsViewModel()
+    {
+        SettingsService = new SettingsService();
+    }
+#endif
 }

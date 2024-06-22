@@ -17,7 +17,7 @@
         <!--  Theme Expander  -->
         <ui:SettingsExpander Header="App Theme" IconSource="DarkTheme">
             <ui:SettingsExpander.Footer>
-                <ComboBox ItemsSource="{Binding ThemeEnums, Mode=OneTime}" SelectedItem="{Binding AppSettings.Theme}" />
+                <ComboBox ItemsSource="{Binding ThemeEnums, Mode=OneTime}" SelectedItem="{Binding SettingsService.AppSettings.Theme}" />
             </ui:SettingsExpander.Footer>
         </ui:SettingsExpander>
         <!--  Theme Expander  -->
@@ -29,11 +29,11 @@
                     <CheckBox Grid.Column="0"
                               Margin="0,0,10,0"
                               Content="System Accent"
-                              IsChecked="{Binding AppSettings.SystemAccent}" />
+                              IsChecked="{Binding SettingsService.AppSettings.SystemAccent}" />
                     <ui:ColorPickerButton Grid.Column="1"
                                           IsAlphaEnabled="False"
-                                          IsEnabled="{Binding !AppSettings.SystemAccent}"
-                                          Color="{Binding AppSettings.AccentColor}" />
+                                          IsEnabled="{Binding !SettingsService.AppSettings.SystemAccent}"
+                                          Color="{Binding SettingsService.AppSettings.AccentColor}" />
                 </Grid>
             </ui:SettingsExpander.Footer>
         </ui:SettingsExpander>
@@ -65,7 +65,7 @@
                              Header="Check Updates"
                              IsClickEnabled="True">
             <ui:SettingsExpander.Footer>
-                <CheckBox Content="Check On Startup" IsChecked="{Binding AppSettings.CheckUpdates}" />
+                <CheckBox Content="Check On Startup" IsChecked="{Binding SettingsService.AppSettings.CheckUpdates}" />
             </ui:SettingsExpander.Footer>
         </ui:SettingsExpander>
         <!--  Updates Expander  -->

@@ -15,6 +15,7 @@ using NLog.Config;
 using Nyaavigator.Builders;
 using Nyaavigator.Extensions;
 using Nyaavigator.Models;
+using Nyaavigator.Services;
 using Nyaavigator.Utilities;
 using Nyaavigator.ViewModels;
 using Nyaavigator.Views;
@@ -54,9 +55,9 @@ public partial class App : Application
 
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            var viewmodel = ServiceProvider.GetRequiredService<SettingsViewModel>();
-            if (viewmodel.AppSettings.CheckUpdates)
-                await Utilities.Updates.CheckUpdate();
+            var settingsService = ServiceProvider.GetRequiredService<SettingsService>();
+            if (settingsService.AppSettings.CheckUpdates)
+                await Updates.CheckUpdate();
         });
     }
 
@@ -94,6 +95,7 @@ public partial class App : Application
     {
         ServiceCollection serviceCollection = [];
 
+        serviceCollection.AddSingleton<SettingsService>();
         serviceCollection.AddSingleton<WindowViewModel>();
         serviceCollection.AddSingleton<SettingsViewModel>();
         serviceCollection.AddTransient<LogsViewModel>();

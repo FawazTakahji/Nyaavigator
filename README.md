@@ -8,9 +8,9 @@
     An app for browsing <a href="https://www.nyaa.si">nyaa.si</a>.
     <br/>
     <br/>
-    <a href="https://github.com/FawazTakhji/Nyaavigator/issues/new?labels=bug&template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/FawazTakhji/Nyaavigator/issues/new?assignees=FawazTakahji&labels=enhancement&projects=&template=feature_request.md&title=Feature+request%3A">Report Bug</a>
     .
-    <a href="https://github.com/FawazTakhji/Nyaavigator/issues/new?labels=enhancement&template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/FawazTakhji/Nyaavigator/issues/new?assignees=FawazTakahji&labels=bug&projects=&template=bug_report.md&title=Bug+report%3A">Request Feature</a>
   </p>
 </p>
 

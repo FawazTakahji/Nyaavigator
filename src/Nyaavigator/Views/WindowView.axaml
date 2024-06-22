@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:models="clr-namespace:Nyaavigator.Models"
         xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
         xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
         xmlns:vs="clr-namespace:Nyaavigator.Views"
@@ -98,7 +99,7 @@
                     Content="{mi:MaterialIconExt SortVariant, Size=20}">
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedRight">
-                        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                             <Grid.Styles>
                                 <Style Selector="StackPanel">
                                     <Setter Property="Orientation" Value="Horizontal" />
@@ -120,13 +121,26 @@
                                 <ToggleButton Content="Comments" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=comments}" />
                                 <ToggleButton Content="Date" IsChecked="{Binding SelectedSorting, Converter={StaticResource StringParameterBool}, ConverterParameter=id}" />
                             </StackPanel>
-                            <Separator Grid.Row="4"
-                                       Margin="0,0,0,5"
-                                       Background="{DynamicResource SeparatorBrush}" />
-                            <StackPanel Grid.Row="5">
+                            <Separator Grid.Row="4" Background="{DynamicResource SeparatorBrush}" />
+                            <StackPanel Grid.Row="5" Margin="0,5">
                                 <ToggleButton Content="Ascending" IsChecked="{Binding SelectedOrder, Converter={StaticResource StringParameterBool}, ConverterParameter=asc}" />
                                 <ToggleButton Content="Descending" IsChecked="{Binding SelectedOrder, Converter={StaticResource StringParameterBool}, ConverterParameter=desc}" />
                             </StackPanel>
+                            <Separator Grid.Row="6"
+                                       Margin="0,0,0,5"
+                                       Background="{DynamicResource SeparatorBrush}" />
+                            <CheckBox Grid.Row="7"
+                                      Content="Hide torrents with no seeders"
+                                      IsChecked="{Binding AppSettings.HideTorrentsWithNoSeeders}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <MultiBinding.Bindings>
+                                            <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
+                                            <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
@@ -162,7 +176,7 @@
                   CellTheme="{StaticResource DataGridCellEx}"
                   DoubleTapped="DataGrid_DoubleTapped"
                   IsVisible="{Binding Torrents.Count, Mode=OneWay}"
-                  ItemsSource="{Binding Torrents}"
+                  ItemsSource="{Binding TorrentsView}"
                   RowTheme="{StaticResource DataGridRowEx}"
                   Theme="{StaticResource DataGridEx}">
             <DataGrid.Styles>
@@ -194,12 +208,11 @@
                         <DataTemplate>
                             <CheckBox Margin="-7,0,0,0"
                                       Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckIsAllSelectedCommand}"
-                                      IsChecked="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).IsAllSelected}"
-                                      IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}" />
+                                      IsChecked="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).IsAllSelected}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <CheckBox Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckSelectedCommand}"
                                       DoubleTapped="DoubleTapBlock"
                                       IsChecked="{Binding IsSelected}"
@@ -214,7 +227,7 @@
                                         MaxWidth="80"
                                         Header="Category">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <Image Width="80"
                                    Height="28"
                                    Margin="0,5"
@@ -230,7 +243,7 @@
                                         CellStyleClasses="Padding"
                                         Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <Grid ColumnDefinitions="*, Auto">
                                 <!--  Text  -->
                                 <SelectableTextBlock Grid.Column="0"
@@ -295,7 +308,7 @@
                                         MaxWidth="85"
                                         Header="Links">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <Grid HorizontalAlignment="Center" ColumnDefinitions="Auto, Auto">
                                 <Button Grid.Column="0"
                                         Margin="0,0,5,0"
@@ -326,7 +339,7 @@
                                         CellStyleClasses="Padding"
                                         Header="Size">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -339,7 +352,7 @@
                 <!--  Date  -->
                 <DataGridTemplateColumn Width="Auto" Header="Date">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -357,7 +370,7 @@
                                          ToolTip.Tip="Seeders" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -375,7 +388,7 @@
                                          ToolTip.Tip="Leechers" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -393,7 +406,7 @@
                                          ToolTip.Tip="Downloads" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:Torrent">
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"

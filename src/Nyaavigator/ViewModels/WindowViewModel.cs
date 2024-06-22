@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Enums;
 using Nyaavigator.Models;
 using Nyaavigator.Utilities;
 using Nyaavigator.Builders;
 using Nyaavigator.Views;
 using NotificationType = Avalonia.Controls.Notifications.NotificationType;
+using Settings = Nyaavigator.Models.Settings;
 
 namespace Nyaavigator.ViewModels;
 
@@ -42,20 +46,72 @@ public partial class WindowViewModel : ObservableObject
     [ObservableProperty]
     private string _resultsString = string.Empty;
 
+    [ObservableProperty]
+    private DataGridCollectionView _torrentsView;
+    public Settings AppSettings { get; }
+
     public WindowViewModel()
     {
         SelectedFilter = Filters[0];
         SelectedCategory = Categories[0];
 
-        // notify converter
-        DownloadTorrentsCommand.PropertyChanged += (_, _) =>
+        // TODO: settings should be its own service
+        AppSettings = App.ServiceProvider.GetRequiredService<SettingsViewModel>().AppSettings;
+
+        DownloadTorrentsCommand.PropertyChanged += (_, e) =>
         {
-            OnPropertyChanged(nameof(DownloadTorrentsCommand));
+            if (e.PropertyName == nameof(DownloadTorrentsCommand.IsRunning))
+                CheckIsAllSelectedCommand.NotifyCanExecuteChanged();
         };
+
+        TorrentsView = new DataGridCollectionView(Torrents, true, true)
+        {
+            Filter = item => !AppSettings.HideTorrentsWithNoSeeders || ((Torrent)item).Seeders != "0"
+        };
+
+        TorrentsView.CollectionChanged += (_, _) =>
+        {
+            CheckIsAllSelectedCommand.NotifyCanExecuteChanged();
+        };
+
+        AppSettings.PropertyChanged += OnHideTorrentsChanged;
 
 #if DEBUG
         Dispatcher.UIThread.InvokeAsync(CreateDebugItems);
 #endif
+    }
+
+    private void OnHideTorrentsChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(AppSettings.HideTorrentsWithNoSeeders))
+            return;
+
+        TorrentsView.Refresh();
+
+        switch (TorrentsView.IsEmpty)
+        {
+            case true when IsAllSelected is null or true:
+            {
+                IsAllSelected = false;
+                foreach (Torrent torrent in Torrents)
+                {
+                    torrent.IsSelected = false;
+                }
+
+                break;
+            }
+            case false when IsAllSelected is null or true:
+            {
+                foreach (Torrent torrent in Torrents)
+                {
+                    if (!TorrentsView.Contains(torrent))
+                        torrent.IsSelected = false;
+                }
+                CheckSelected();
+
+                break;
+            }
+        }
     }
 
     [RelayCommand]
@@ -102,6 +158,13 @@ public partial class WindowViewModel : ObservableObject
         catch (OperationCanceledException)
         {
             new Notification("Search cancelled by user.", type:NotificationType.Error).Send();
+        }
+
+        if (Torrents.Count > 0 && TorrentsView.IsEmpty)
+        {
+            new Notification("Results Hidden",
+                "You have \"Hide torrents with no seeders\" enabled. To see all results, disable this setting.",
+                NotificationType.Warning).Send();
         }
     }
 
@@ -248,17 +311,17 @@ public partial class WindowViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanCheckIsAllSelectedExecute))]
     private void CheckIsAllSelected()
     {
         if (IsAllSelected == true)
         {
-            foreach (Torrent torrent in Torrents)
+            foreach (Torrent torrent in TorrentsView)
                 torrent.IsSelected = true;
         }
         else
         {
-            foreach (Torrent torrent in Torrents)
+            foreach (Torrent torrent in TorrentsView)
                 torrent.IsSelected = false;
         }
     }
@@ -272,6 +335,11 @@ public partial class WindowViewModel : ObservableObject
             IsAllSelected = false;
         else
             IsAllSelected = null;
+    }
+
+    private bool CanCheckIsAllSelectedExecute()
+    {
+        return !TorrentsView.IsEmpty && !DownloadTorrentsCommand.IsRunning;
     }
 
 #if DEBUG
@@ -292,6 +360,20 @@ public partial class WindowViewModel : ObservableObject
                 Size = "1 GiB",
                 IsDownloading = true,
                 IsSelected = true
+            },
+            new Torrent
+            {
+                Category = "Test",
+                Name = "Test",
+                Comments = 0,
+                Date = DateTime.Now - TimeSpan.FromDays(1),
+                Downloads = "0",
+                Leechers = "0",
+                Magnet = null,
+                Seeders = "0",
+                Size = "1 GiB",
+                IsDownloading = false,
+                IsSelected = false
             }
         ];
         List<PageButton> pages =
@@ -321,7 +403,7 @@ public partial class WindowViewModel : ObservableObject
         Torrents.Reset(torrents);
         Pages.Reset(pages);
         ResultsString = "Displaying results 976-1000 out of 1000 results.";
-        IsAllSelected = true;
+        IsAllSelected = null;
     }
 #endif
 }

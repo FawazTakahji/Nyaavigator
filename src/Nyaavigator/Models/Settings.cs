@@ -10,10 +10,19 @@ public partial class Settings : ObservableObject
 {
     [ObservableProperty]
     private bool _systemAccent = true;
-    [ObservableProperty]
-    private bool _checkUpdates = true;
     [ObservableProperty] [property: JsonConverter(typeof(JsonColorConverter))]
     private Color _accentColor = Color.FromRgb(51, 122, 183);
     [ObservableProperty] [property: JsonConverter(typeof(JsonStringEnumConverter))]
     private Theme _theme;
+    [ObservableProperty]
+    private bool _hideTorrentsWithNoSeeders;
+
+    // Stop the previewer from spamming GitHub api
+    [ObservableProperty]
+    private bool _checkUpdates =
+#if DEBUG
+        false;
+#else
+        true;
+#endif
 }

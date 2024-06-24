@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +40,7 @@ public partial class WindowViewModel : ObservableObject
     [ObservableProperty]
     private string _selectedOrder = "desc";
 
-    public SmartCollection<Torrent> Torrents { get; } = [];
+    public TorrentCollection Torrents { get; } = [];
     public SmartCollection<PageButton> Pages { get; } = [];
     [ObservableProperty]
     private string _resultsString = string.Empty;
@@ -58,10 +57,19 @@ public partial class WindowViewModel : ObservableObject
         // TODO: settings should be its own service
         SettingsService = App.ServiceProvider.GetRequiredService<SettingsService>();
 
+        Torrents.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(TorrentCollection.IsAnyTorrentDownloading))
+                SearchCommand.NotifyCanExecuteChanged();
+        };
+
         DownloadTorrentsCommand.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(DownloadTorrentsCommand.IsRunning))
+            {
                 CheckIsAllSelectedCommand.NotifyCanExecuteChanged();
+                CheckSelectedCommand.NotifyCanExecuteChanged();
+            }
         };
 
         TorrentsView = new DataGridCollectionView(Torrents, true, true)
@@ -81,39 +89,6 @@ public partial class WindowViewModel : ObservableObject
 #endif
     }
 
-    private void OnHideTorrentsChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(SettingsService.AppSettings.HideTorrentsWithNoSeeders))
-            return;
-
-        TorrentsView.Refresh();
-
-        switch (TorrentsView.IsEmpty)
-        {
-            case true when IsAllSelected is null or true:
-            {
-                IsAllSelected = false;
-                foreach (Torrent torrent in Torrents)
-                {
-                    torrent.IsSelected = false;
-                }
-
-                break;
-            }
-            case false when IsAllSelected is null or true:
-            {
-                foreach (Torrent torrent in Torrents)
-                {
-                    if (!TorrentsView.Contains(torrent))
-                        torrent.IsSelected = false;
-                }
-                CheckSelected();
-
-                break;
-            }
-        }
-    }
-
     [RelayCommand]
     private async Task ShowMoreInfo(string? link)
     {
@@ -127,7 +102,7 @@ public partial class WindowViewModel : ObservableObject
         await new TorrentInfoView(viewModel).Show();
     }
 
-    [RelayCommand(IncludeCancelCommand = true)]
+    [RelayCommand(IncludeCancelCommand = true, CanExecute = nameof(CanSearchExecute))]
     private async Task Search(string href, CancellationToken token)
     {
         IsAllSelected = false;
@@ -150,7 +125,6 @@ public partial class WindowViewModel : ObservableObject
         {
             token.ThrowIfCancellationRequested();
             (List<Torrent> torrents, List<PageButton> pages, string resultsString) = await Nyaa.Search(searchString, token);
-            token.ThrowIfCancellationRequested();
             Torrents.AddRange(torrents);
             Pages.AddRange(pages);
             ResultsString = resultsString;
@@ -168,56 +142,7 @@ public partial class WindowViewModel : ObservableObject
         }
     }
 
-    [RelayCommand(AllowConcurrentExecutions = true)]
-    private static async Task DownloadTorrent(Torrent torrent)
-    {
-        if (torrent.DownloadHref == null)
-        {
-            new Notification("Download Failed", $"The download link for \"{torrent.Name}\" is invalid.", NotificationType.Error).Send();
-            return;
-        }
-
-        torrent.IsDownloading = true;
-
-        (Stream? Stream, string? Name) torrentFile = await Nyaa.GetTorrentFile(torrent.DownloadHref);
-        if (torrentFile.Stream == null)
-        {
-            torrent.IsDownloading = false;
-            return;
-        }
-
-        string fileName = torrentFile.Name ?? Path.GetFileName(torrent.DownloadHref);
-
-        IStorageFile? file = await Storage.TorrentFilePickerAsync(fileName);
-        if (file == null)
-        {
-            new Notification("Download cancelled by user.", type: NotificationType.Error).Send();
-            torrent.IsDownloading = false;
-            return;
-        }
-
-        try
-        {
-            await using var fileStream = new FileStream(file.Path.LocalPath, FileMode.Create);
-            await torrentFile.Stream.CopyToAsync(fileStream);
-            if (File.Exists(file.Path.LocalPath))
-                new Notification("Download Complete", $"{fileName}\n\nClick to open.", NotificationType.Success,
-                    onClick: () => Storage.OpenFile(file.Path.LocalPath)).Send();
-        }
-        catch (Exception ex)
-        {
-            string message = $"An error occurred while copying the file to \"{file.Path.LocalPath}\".";
-            Logger.Error(ex, message);
-            Dialog.Create()
-                .Type(DialogType.Error)
-                .Content(message)
-                .ShowAndForget();
-        }
-
-        torrent.IsDownloading = false;
-    }
-
-    [RelayCommand]
+    [RelayCommand(IncludeCancelCommand = true)]
     private async Task DownloadTorrents(CancellationToken token)
     {
         List<Torrent> selectedTorrents = Torrents.Where(t => t.IsSelected).ToList();
@@ -235,60 +160,18 @@ public partial class WindowViewModel : ObservableObject
         {
             foreach (Torrent torrent in selectedTorrents)
             {
-                if (torrent.DownloadHref == null)
-                {
-                    new Notification("Download Failed", $"The download link for \"{torrent.Name}\" is invalid.", NotificationType.Error).Send();
-                    continue;
-                }
-
-                (Stream? Stream, string? Name) torrentFile = await Nyaa.GetTorrentFile(torrent.DownloadHref, token);
-                if (torrentFile.Stream == null)
-                {
-                    torrent.IsDownloading = false;
-                    await Task.Delay(1000, token);
-                    continue;
-                }
-
-                string fileName = torrentFile.Name ?? Path.GetFileName(torrent.DownloadHref);
-                string baseName = Path.GetFileNameWithoutExtension(fileName);
-                string filePath = Path.Combine(folder.Path.LocalPath, fileName);
-                for (int i = 1; File.Exists(filePath); i++)
-                {
-                    token.ThrowIfCancellationRequested();
-
-                    fileName = $"{baseName} ({i}).torrent";
-                    filePath = Path.Combine(folder.Path.LocalPath, fileName);
-                }
-
-                try
-                {
-                    await using var fileStream = new FileStream(filePath, FileMode.CreateNew);
-                    await torrentFile.Stream.CopyToAsync(fileStream);
-                    if (File.Exists(filePath))
-                        new Notification("Download Complete", $"{fileName}\n\nClick to open.", NotificationType.Success,
-                            onClick: () => Storage.OpenFile(filePath)).Send();
-                }
-                catch (Exception ex)
-                {
-                    string message = $"An error occurred while copying the file to \"{filePath}\".";
-                    Logger.Error(ex, message);
-                    Dialog.Create()
-                        .Type(DialogType.Error)
-                        .Content(message)
-                        .ShowAndForget();
-                }
-
-                torrent.IsDownloading = false;
-                await Task.Delay(1000, token);
                 token.ThrowIfCancellationRequested();
+                bool success = await torrent.Download(folder.Path.LocalPath, token);
+
+                if (success)
+                    torrent.IsSelected = false;
             }
         }
         catch (OperationCanceledException)
         {
             new Notification("Download cancelled by user.", type: NotificationType.Error).Send();
+            selectedTorrents.ForEach(x => x.IsDownloading = false);
         }
-
-        selectedTorrents.ForEach(x => x.IsDownloading = false);
     }
 
     [RelayCommand]
@@ -326,7 +209,7 @@ public partial class WindowViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanCheckSelectedExecute))]
     private void CheckSelected()
     {
         if (Torrents.All(x => x.IsSelected))
@@ -337,10 +220,42 @@ public partial class WindowViewModel : ObservableObject
             IsAllSelected = null;
     }
 
-    private bool CanCheckIsAllSelectedExecute()
+    private void OnHideTorrentsChanged(object? sender, PropertyChangedEventArgs e)
     {
-        return !TorrentsView.IsEmpty && !DownloadTorrentsCommand.IsRunning;
+        if (e.PropertyName != nameof(SettingsService.AppSettings.HideTorrentsWithNoSeeders))
+            return;
+
+        TorrentsView.Refresh();
+
+        switch (TorrentsView.IsEmpty)
+        {
+            case true when IsAllSelected is null or true:
+            {
+                IsAllSelected = false;
+                foreach (Torrent torrent in Torrents)
+                {
+                    torrent.IsSelected = false;
+                }
+
+                break;
+            }
+            case false when IsAllSelected is null or true:
+            {
+                foreach (Torrent torrent in Torrents)
+                {
+                    if (!TorrentsView.Contains(torrent))
+                        torrent.IsSelected = false;
+                }
+                CheckSelected();
+
+                break;
+            }
+        }
     }
+
+    private bool CanCheckIsAllSelectedExecute => !TorrentsView.IsEmpty && !DownloadTorrentsCommand.IsRunning;
+    private bool CanCheckSelectedExecute => !Torrents.IsAnyTorrentDownloading;
+    private bool CanSearchExecute => !Torrents.IsAnyTorrentDownloading;
 
 #if DEBUG
     private void CreateDebugItems()

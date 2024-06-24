@@ -4,7 +4,6 @@
              xmlns:commands="clr-namespace:Nyaavigator.Commands"
              xmlns:converters="clr-namespace:Nyaavigator.Converters"
              xmlns:converters.CategoryIcon="clr-namespace:Nyaavigator.Converters.CategoryIcon"
-             xmlns:converters.DownloadsButton="clr-namespace:Nyaavigator.Converters.DownloadsButton"
              xmlns:converters.Level="clr-namespace:Nyaavigator.Converters.Level"
              xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
@@ -54,8 +53,6 @@
         <converters:StringParameterBool x:Key="StringParameterBool" />
         <converters.CategoryIcon:StringToBitmap x:Key="CategoryIconStringToBitmap" />
         <converters.CategoryIcon:StringToDescription x:Key="CategoryIconStringToDescription" />
-        <converters.DownloadsButton:BoolToContent x:Key="DownloadsButtonBoolToContent" />
-        <converters:BoolToCommand x:Key="BoolToCommand" />
         <converters:LinkIsValid x:Key="LinkIsValid" />
         <converters:LinkIsNotValid x:Key="LinkIsNotValid" />
         <converters:RepeaterMargin x:Key="RepeaterMargin" />

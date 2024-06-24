@@ -20,7 +20,7 @@ public class SmartCollection<T> : ObservableCollection<T>
     {
     }
 
-    public void AddRange(IEnumerable<T> range)
+    public virtual void AddRange(IEnumerable<T> range)
     {
         foreach (var item in range)
         {
@@ -32,7 +32,7 @@ public class SmartCollection<T> : ObservableCollection<T>
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
-    public void Reset(IEnumerable<T> range)
+    public virtual void Reset(IEnumerable<T> range)
     {
         Items.Clear();
         AddRange(range);

@@ -131,16 +131,8 @@
                                        Background="{DynamicResource SeparatorBrush}" />
                             <CheckBox Grid.Row="7"
                                       Content="Hide torrents with no seeders"
-                                      IsChecked="{Binding SettingsService.AppSettings.HideTorrentsWithNoSeeders}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                        <MultiBinding.Bindings>
-                                            <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
-                                            <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
-                                        </MultiBinding.Bindings>
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
+                                      IsChecked="{Binding SettingsService.AppSettings.HideTorrentsWithNoSeeders}"
+                                      IsEnabled="{Binding !Torrents.IsAnyTorrentDownloading}" />
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
@@ -154,16 +146,7 @@
                     Margin="1,0,2,0"
                     VerticalAlignment="Stretch"
                     Command="{Binding SearchCommand}"
-                    Content="{mi:MaterialIconExt Search, Size=20}">
-                <Button.IsEnabled>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                        <MultiBinding.Bindings>
-                            <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
-                            <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
-                        </MultiBinding.Bindings>
-                    </MultiBinding>
-                </Button.IsEnabled>
-            </Button>
+                    Content="{mi:MaterialIconExt Search, Size=20}" />
             <!--  Search Button  -->
         </Grid>
         <!--  Header  -->
@@ -215,8 +198,7 @@
                         <DataTemplate x:DataType="models:Torrent">
                             <CheckBox Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckSelectedCommand}"
                                       DoubleTapped="DoubleTapBlock"
-                                      IsChecked="{Binding IsSelected}"
-                                      IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}" />
+                                      IsChecked="{Binding IsSelected}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -310,13 +292,22 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="models:Torrent">
                             <Grid HorizontalAlignment="Center" ColumnDefinitions="Auto, Auto">
+                                <!--  Download Button  -->
                                 <Button Grid.Column="0"
                                         Margin="0,0,5,0"
-                                        Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentCommand}"
-                                        CommandParameter="{Binding Mode=OneWay}"
+                                        Command="{Binding OpenDownloadDialogCommand}"
                                         Content="{mi:MaterialIconExt Download}"
                                         DoubleTapped="DoubleTapBlock"
-                                        IsEnabled="{Binding !IsDownloading, Mode=OneWay}" />
+                                        IsEnabled="{Binding !$parent[DataGrid].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning, Mode=OneWay}"
+                                        IsVisible="{Binding !IsDownloading, Mode=OneWay}" />
+                                <Button Grid.Column="0"
+                                        Margin="0,0,5,0"
+                                        Command="{Binding OpenDownloadDialogCancelCommand}"
+                                        Content="{mi:MaterialIconExt CancelThick}"
+                                        DoubleTapped="DoubleTapBlock"
+                                        IsVisible="{Binding IsDownloading, Mode=OneWay}" />
+                                <!--  Download Button  -->
+
                                 <Button Grid.Column="1"
                                         Command="{StaticResource OpenLinkCommand}"
                                         CommandParameter="{Binding Magnet, Mode=OneWay}"
@@ -427,8 +418,7 @@
                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                     <MultiBinding.Bindings>
                         <Binding Mode="OneWay" Path="!!Torrents.Count" />
-                        <Binding Mode="OneWay" Path="!DownloadTorrentsCommand.IsRunning" />
-                        <Binding Mode="OneWay" Path="!DownloadTorrentCommand.IsRunning" />
+                        <Binding Mode="OneWay" Path="!Torrents.IsAnyTorrentDownloading" />
                     </MultiBinding.Bindings>
                 </MultiBinding>
             </Separator.IsVisible>
@@ -440,16 +430,8 @@
                      Grid.Column="0"
                      Height="1"
                      Margin="0,0,0,1"
-                     IsIndeterminate="True">
-            <ProgressBar.IsVisible>
-                <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                    <MultiBinding.Bindings>
-                        <Binding Mode="OneWay" Path="DownloadTorrentCommand.IsRunning" />
-                        <Binding Mode="OneWay" Path="DownloadTorrentsCommand.IsRunning" />
-                    </MultiBinding.Bindings>
-                </MultiBinding>
-            </ProgressBar.IsVisible>
-        </ProgressBar>
+                     IsIndeterminate="True"
+                     IsVisible="{Binding Torrents.IsAnyTorrentDownloading}" />
         <!--  Downloading Indicator  -->
 
         <!--  Buttons And Results Text  -->
@@ -461,16 +443,32 @@
             <!--  Download Button  -->
             <Button Grid.Column="0"
                     Margin="5,0"
-                    Command="{Binding DownloadTorrentsCommand, Converter={StaticResource BoolToCommand}}"
-                    IsEnabled="{Binding IsAllSelected}">
+                    Command="{Binding DownloadTorrentsCommand}"
+                    IsEnabled="{Binding IsAllSelected}"
+                    IsVisible="{Binding !DownloadTorrentsCommand.IsRunning, Mode=OneWay}">
 
                 <Grid ColumnDefinitions="Auto, Auto">
                     <mi:MaterialIcon Grid.Column="0"
                                      Margin="0,0,5,0"
-                                     Kind="{Binding DownloadTorrentsCommand.IsRunning, Converter={StaticResource DownloadsButtonBoolToContent}, Mode=OneWay}" />
+                                     Kind="Download" />
                     <TextBlock Grid.Column="1"
                                MinWidth="{OnPlatform Default=135, Windows=120}"
-                               Text="{Binding DownloadTorrentsCommand.IsRunning, Converter={StaticResource DownloadsButtonBoolToContent}, Mode=OneWay}" />
+                               Text="Download Selected" />
+                </Grid>
+            </Button>
+
+            <Button Grid.Column="0"
+                    Margin="5,0"
+                    Command="{Binding DownloadTorrentsCancelCommand}"
+                    IsVisible="{Binding DownloadTorrentsCommand.IsRunning, Mode=OneWay}">
+
+                <Grid ColumnDefinitions="Auto, Auto">
+                    <mi:MaterialIcon Grid.Column="0"
+                                     Margin="0,0,5,0"
+                                     Kind="CancelThick" />
+                    <TextBlock Grid.Column="1"
+                               MinWidth="{OnPlatform Default=135, Windows=120}"
+                               Text="Cancel Downloads" />
                 </Grid>
             </Button>
             <!--  Download Button  -->
@@ -543,8 +541,6 @@
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <MultiBinding.Bindings>
                                     <Binding Mode="OneWay" Path="IsEnabled" />
-                                    <Binding Mode="OneWay" Path="!$parent[ItemsRepeater].((vms:WindowViewModel)DataContext).DownloadTorrentCommand.IsRunning" />
-                                    <Binding Mode="OneWay" Path="!$parent[ItemsRepeater].((vms:WindowViewModel)DataContext).DownloadTorrentsCommand.IsRunning" />
                                 </MultiBinding.Bindings>
                             </MultiBinding>
                         </Button.IsEnabled>

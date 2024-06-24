@@ -536,15 +536,8 @@
                             Classes.accent="{Binding IsActive, Mode=OneWay}"
                             Command="{Binding $parent[ItemsRepeater].((vms:WindowViewModel)DataContext).SearchCommand}"
                             CommandParameter="{Binding Href, Mode=OneWay}"
-                            Content="{Binding Content, Mode=OneWay}">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                <MultiBinding.Bindings>
-                                    <Binding Mode="OneWay" Path="IsEnabled" />
-                                </MultiBinding.Bindings>
-                            </MultiBinding>
-                        </Button.IsEnabled>
-                    </Button>
+                            Content="{Binding Content, Mode=OneWay}"
+                            IsEnabled="{Binding IsEnabled, Mode=OneWay}" />
                 </DataTemplate>
             </ItemsRepeater.ItemTemplate>
         </ItemsRepeater>

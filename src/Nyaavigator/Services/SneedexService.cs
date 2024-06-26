@@ -30,7 +30,7 @@ public class SneedexService
 
     public async Task<bool> IsBestRelease(int id)
     {
-        if (DateTimeOffset.Now - _lastUpdate < TimeSpan.FromHours(1))
+        if (DateTimeOffset.Now - _lastUpdate > TimeSpan.FromHours(1))
             await RefreshIds();
 
         return _entries.Any(e => e.Ids.Contains(id));

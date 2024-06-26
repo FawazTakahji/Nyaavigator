@@ -188,6 +188,8 @@ public partial class WindowViewModel : ObservableObject
             new Notification("Download cancelled by user.", type: NotificationType.Error).Send();
             selectedTorrents.ForEach(x => x.IsDownloading = false);
         }
+
+        CheckSelected();
     }
 
     [RelayCommand]

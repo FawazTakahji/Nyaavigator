@@ -16,6 +16,8 @@ public partial class Settings : ObservableObject
     private Theme _theme;
     [ObservableProperty]
     private bool _hideTorrentsWithNoSeeders;
+    [ObservableProperty]
+    private bool _sneedexIntegration;
 
     // Stop the previewer from spamming GitHub api
     [ObservableProperty]

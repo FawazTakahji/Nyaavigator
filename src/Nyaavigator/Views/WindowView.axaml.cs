@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Messages;
 using Nyaavigator.Models;
+using Nyaavigator.Services;
 using Nyaavigator.ViewModels;
 
 namespace Nyaavigator.Views;
@@ -14,12 +15,20 @@ namespace Nyaavigator.Views;
 public partial class WindowView : Window, IRecipient<NotificationMessage>
 {
     private WindowNotificationManager _notificationManager;
+    private readonly SneedexService _sneedexService;
 
     public WindowView()
     {
         InitializeComponent();
-        DataContext = App.ServiceProvider.GetRequiredService<WindowViewModel>();
+        DataContext = new WindowViewModel();
+        _sneedexService = App.ServiceProvider.GetRequiredService<SneedexService>();
+
         WeakReferenceMessenger.Default.Register<NotificationMessage>(this);
+
+        SettingsButton.Click += (_, _) =>
+        {
+            new SettingsView().Show();
+        };
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -45,19 +54,13 @@ public partial class WindowView : Window, IRecipient<NotificationMessage>
 
     private void SearchBarKeys(object? sender, KeyEventArgs e)
     {
-        if (e.Handled)
+        if (e.Handled || DataContext is not WindowViewModel viewModel)
             return;
 
-        if (e.Key == Key.Enter && SearchButton.IsEnabled)
-        {
-            WindowViewModel viewModel = (WindowViewModel)DataContext;
-            if (viewModel.SearchCommand.CanExecute(null))
-                viewModel.SearchCommand.Execute(null);
-        }
-        else if (e.Key == Key.Escape)
-        {
-            ((TextBox)sender).Text = string.Empty;
-        }
+        if (e.Key == Key.Enter && viewModel.SearchCommand.CanExecute(null))
+            viewModel.SearchCommand.Execute(null);
+        else if (e.Key == Key.Escape && sender is TextBox textBox)
+            textBox.Text = string.Empty;
     }
 
     private void DataGrid_DoubleTapped(object? sender, TappedEventArgs e)

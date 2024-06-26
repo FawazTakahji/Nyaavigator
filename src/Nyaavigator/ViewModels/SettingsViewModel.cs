@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.Core;
-using Nyaavigator.Enums;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Extensions;
 using Nyaavigator.Services;
 using Nyaavigator.Utilities;
@@ -15,14 +14,11 @@ namespace Nyaavigator.ViewModels;
 public partial class SettingsViewModel : ObservableObject
 {
     public SettingsService SettingsService { get; }
-    [ObservableProperty]
-    private Array _themeEnums = Enum.GetValues(typeof(Theme));
-    [ObservableProperty]
-    private string _currentVersion = $"v{typeof(SettingsViewModel).Assembly.GetName().Version!.GetMajorMinorBuild().ToString()}";
+    public string CurrentVersion { get; } = $"v{typeof(SettingsViewModel).Assembly.GetName().Version!.GetMajorMinorBuild().ToString()}";
 
-    public SettingsViewModel(SettingsService settingsService)
+    public SettingsViewModel()
     {
-        SettingsService = settingsService;
+        SettingsService = App.ServiceProvider.GetRequiredService<SettingsService>();
     }
 
     [RelayCommand]
@@ -52,11 +48,4 @@ public partial class SettingsViewModel : ObservableObject
     {
         await Updates.CheckUpdate(true);
     }
-
-#if DEBUG
-    public SettingsViewModel()
-    {
-        SettingsService = new SettingsService();
-    }
-#endif
 }

@@ -96,8 +96,7 @@ public partial class App : Application
         ServiceCollection serviceCollection = [];
 
         serviceCollection.AddSingleton<SettingsService>();
-        serviceCollection.AddSingleton<WindowViewModel>();
-        serviceCollection.AddSingleton<SettingsViewModel>();
+        serviceCollection.AddSingleton<SneedexService>();
         serviceCollection.AddTransient<LogsViewModel>();
 
         Version version = typeof(App).Assembly.GetName().Version.GetMajorMinorBuild();
@@ -120,6 +119,13 @@ public partial class App : Application
             client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
             client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
             client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+        });
+
+        serviceCollection.AddHttpClient("SneedexClient", client =>
+        {
+            client.BaseAddress = new Uri("https://sneedex.moe/");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
         });
 
         return serviceCollection.BuildServiceProvider();

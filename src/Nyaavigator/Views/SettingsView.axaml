@@ -2,7 +2,9 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:enums="clr-namespace:Nyaavigator.Enums"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
              d:DesignHeight="450"
@@ -13,71 +15,118 @@
         <vms:SettingsViewModel />
     </Design.DataContext>
 
-    <StackPanel Spacing="2">
-        <!--  Theme Expander  -->
-        <ui:SettingsExpander Header="App Theme" IconSource="DarkTheme">
-            <ui:SettingsExpander.Footer>
-                <ComboBox ItemsSource="{Binding ThemeEnums, Mode=OneTime}" SelectedItem="{Binding SettingsService.AppSettings.Theme}" />
-            </ui:SettingsExpander.Footer>
-        </ui:SettingsExpander>
-        <!--  Theme Expander  -->
+    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" RowDefinitions="Auto, Auto, *">
+        <Grid Grid.Row="0"
+              Margin="10,5,5,10"
+              ColumnDefinitions="Auto, *">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       FontSize="20"
+                       Text="Settings" />
 
-        <!--  Accent Expander  -->
-        <ui:SettingsExpander Name="AccentExpander" Header="App Accent">
-            <ui:SettingsExpander.Footer>
-                <Grid ColumnDefinitions="Auto, Auto">
-                    <CheckBox Grid.Column="0"
-                              Margin="0,0,10,0"
-                              Content="System Accent"
-                              IsChecked="{Binding SettingsService.AppSettings.SystemAccent}" />
-                    <ui:ColorPickerButton Grid.Column="1"
-                                          IsAlphaEnabled="False"
-                                          IsEnabled="{Binding !SettingsService.AppSettings.SystemAccent}"
-                                          Color="{Binding SettingsService.AppSettings.AccentColor}" />
-                </Grid>
-            </ui:SettingsExpander.Footer>
-        </ui:SettingsExpander>
-        <!--  Accent Expander  -->
+            <Button Name="CloseButton"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Classes="accent"
+                    Content="{mi:MaterialIconExt Close, Size=20}" />
+        </Grid>
 
-        <!--  Logs Expander  -->
-        <ui:SettingsExpander Name="LogsExpander"
-                             ActionIconSource="ChevronRight"
-                             Command="{Binding OpenLogsViewerCommand}"
-                             Header="Logs Viewer"
-                             IsClickEnabled="True" />
-        <!--  Logs Expander  -->
+        <Separator Grid.Row="1" Background="{DynamicResource SeparatorBrush}" />
 
-        <!--  Folder Expander  -->
-        <ui:SettingsExpander Name="FolderExpander"
-                             ActionIconSource="ChevronRight"
-                             Click="CloseView"
-                             Command="{Binding OpenDataFolderCommand}"
-                             Header="Data Folder"
-                             IsClickEnabled="True" />
-        <!--  Folder Expander  -->
+        <ScrollViewer Grid.Row="2">
+            <StackPanel Spacing="2">
+                <StackPanel.Styles>
+                    <Style Selector="ToggleSwitch">
+                        <Setter Property="Margin" Value="0,0,0,5" />
+                    </Style>
+                </StackPanel.Styles>
 
-        <!--  Updates Expander  -->
-        <ui:SettingsExpander Name="UpdatesExpander"
-                             ActionIconSource="ChevronRight"
-                             Click="CloseView"
-                             Command="{Binding CheckUpdateCommand}"
-                             Description="{Binding CurrentVersion, Mode=OneTime}"
-                             Header="Check Updates"
-                             IsClickEnabled="True">
-            <ui:SettingsExpander.Footer>
-                <CheckBox Content="Check On Startup" IsChecked="{Binding SettingsService.AppSettings.CheckUpdates}" />
-            </ui:SettingsExpander.Footer>
-        </ui:SettingsExpander>
-        <!--  Updates Expander  -->
+                <!--  Theme Expander  -->
+                <ui:SettingsExpander Header="App Theme" IconSource="DarkTheme">
+                    <ui:SettingsExpander.Footer>
+                        <ComboBox SelectedItem="{Binding SettingsService.AppSettings.Theme}">
+                            <enums:Theme>System</enums:Theme>
+                            <enums:Theme>Light</enums:Theme>
+                            <enums:Theme>Dark</enums:Theme>
+                        </ComboBox>
+                    </ui:SettingsExpander.Footer>
+                </ui:SettingsExpander>
+                <!--  Theme Expander  -->
 
-        <!--  Repo Expander  -->
-        <ui:SettingsExpander Name="RepoExpander"
-                             ActionIconSource="ChevronRight"
-                             Click="CloseView"
-                             Command="{StaticResource OpenLinkCommand}"
-                             CommandParameter="https://github.com/FawazTakhji/Nyaavigator"
-                             Header="Repository"
-                             IsClickEnabled="True" />
-        <!--  Repo Expander  -->
-    </StackPanel>
+                <!--  Accent Expander  -->
+                <ui:SettingsExpander Name="AccentExpander" Header="App Accent">
+                    <ui:SettingsExpander.Footer>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <ui:ColorPickerButton IsAlphaEnabled="False"
+                                                  IsVisible="{Binding !SettingsService.AppSettings.SystemAccent}"
+                                                  Color="{Binding SettingsService.AppSettings.AccentColor}" />
+
+                            <CheckBox Content="System Accent" IsChecked="{Binding SettingsService.AppSettings.SystemAccent}" />
+                        </StackPanel>
+                    </ui:SettingsExpander.Footer>
+                </ui:SettingsExpander>
+                <!--  Accent Expander  -->
+
+                <!--  Sneedex Expander  -->
+                <ui:SettingsExpander Name="SneedexExpander"
+                                     Description="Add a star icon next to a torrent's name if the torrent is in the sneedex.moe list."
+                                     Header="Sneedex Integration">
+                    <ui:SettingsExpander.Footer>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Padding="5"
+                                    Command="{StaticResource OpenLinkCommand}"
+                                    CommandParameter="https://sneedex.moe"
+                                    Theme="{StaticResource TransparentButton}">
+                                <mi:MaterialIcon Width="24"
+                                                 Height="24"
+                                                 Kind="Web" />
+                            </Button>
+
+                            <ToggleSwitch IsChecked="{Binding SettingsService.AppSettings.SneedexIntegration}" />
+                        </StackPanel>
+                    </ui:SettingsExpander.Footer>
+                </ui:SettingsExpander>
+                <!--  Sneedex Expander  -->
+
+                <!--  Logs Expander  -->
+                <ui:SettingsExpander Name="LogsExpander"
+                                     ActionIconSource="ChevronRight"
+                                     Command="{Binding OpenLogsViewerCommand}"
+                                     Header="Logs Viewer"
+                                     IsClickEnabled="True" />
+                <!--  Logs Expander  -->
+
+                <!--  Folder Expander  -->
+                <ui:SettingsExpander Name="FolderExpander"
+                                     ActionIconSource="ChevronRight"
+                                     Command="{Binding OpenDataFolderCommand}"
+                                     Header="Data Folder"
+                                     IsClickEnabled="True" />
+                <!--  Folder Expander  -->
+
+                <!--  Updates Expander  -->
+                <ui:SettingsExpander Name="UpdatesExpander"
+                                     ActionIconSource="ChevronRight"
+                                     Command="{Binding CheckUpdateCommand}"
+                                     Description="{Binding CurrentVersion, Mode=OneTime}"
+                                     Header="Check Updates"
+                                     IsClickEnabled="True">
+                    <ui:SettingsExpander.Footer>
+                        <CheckBox Content="Check On Startup" IsChecked="{Binding SettingsService.AppSettings.CheckUpdates}" />
+                    </ui:SettingsExpander.Footer>
+                </ui:SettingsExpander>
+                <!--  Updates Expander  -->
+
+                <!--  Repo Expander  -->
+                <ui:SettingsExpander Name="RepoExpander"
+                                     ActionIconSource="ChevronRight"
+                                     Command="{StaticResource OpenLinkCommand}"
+                                     CommandParameter="https://github.com/FawazTakhji/Nyaavigator"
+                                     Header="Repository"
+                                     IsClickEnabled="True" />
+                <!--  Repo Expander  -->
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

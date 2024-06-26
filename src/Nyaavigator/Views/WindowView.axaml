@@ -26,17 +26,12 @@
               Margin="0,5,0,0"
               ColumnDefinitions="Auto, Auto, Auto, *, Auto, Auto">
             <!--  Settings Button  -->
-            <Button Grid.Row="0"
+            <Button Name="SettingsButton"
+                    Grid.Row="0"
                     Grid.Column="0"
                     Margin="2,0,1,0"
                     VerticalAlignment="Stretch"
-                    Content="{mi:MaterialIconExt Cogs, Size=20}">
-                <Button.Flyout>
-                    <Flyout Placement="BottomEdgeAlignedLeft">
-                        <vs:SettingsView />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
+                    Content="{mi:MaterialIconExt Cogs, Size=20}" />
             <!--  Settings Button  -->
 
             <!--  Filters Combobox  -->
@@ -226,17 +221,35 @@
                                         Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="models:Torrent">
-                            <Grid ColumnDefinitions="*, Auto">
+                            <Grid ColumnDefinitions="*, Auto, Auto">
                                 <!--  Text  -->
                                 <SelectableTextBlock Grid.Column="0"
+                                                     Margin="0,0,5,0"
                                                      Classes="CellText"
                                                      DoubleTapped="DoubleTapBlock"
                                                      Text="{Binding Name, Mode=OneWay}"
                                                      ToolTip.Tip="{Binding Name, Mode=OneWay}" />
                                 <!--  Text  -->
 
+                                <!--  Best Release  -->
+                                <Button Grid.Column="1"
+                                        Padding="3"
+                                        Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).OpenSneedexEntryCommand}"
+                                        CommandParameter="{Binding Id}"
+                                        CornerRadius="15"
+                                        DoubleTapped="DoubleTapBlock"
+                                        IsVisible="{Binding IsBestRelease, Mode=OneWay}"
+                                        Theme="{StaticResource TransparentButton}"
+                                        ToolTip.Tip="This torrent is marked as a best release.&#x0a;&#x0a;Click to open the entry on Sneedex.">
+                                    <mi:MaterialIcon Width="24"
+                                                     Height="24"
+                                                     Foreground="{DynamicResource AccentButtonBackground}"
+                                                     Kind="StarShooting" />
+                                </Button>
+                                <!--  Best Release  -->
+
                                 <!--  Comments And Menu  -->
-                                <SplitButton Grid.Column="1"
+                                <SplitButton Grid.Column="2"
                                              Height="29"
                                              MinHeight="0"
                                              Margin="5,0,0,0"

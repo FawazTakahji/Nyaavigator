@@ -48,6 +48,7 @@ public partial class WindowViewModel : ObservableObject
     [ObservableProperty]
     private DataGridCollectionView _torrentsView;
     public SettingsService SettingsService { get; }
+    private readonly SneedexService _sneedexService;
 
     public WindowViewModel()
     {
@@ -56,6 +57,7 @@ public partial class WindowViewModel : ObservableObject
 
         // TODO: settings should be its own service
         SettingsService = App.ServiceProvider.GetRequiredService<SettingsService>();
+        _sneedexService = App.ServiceProvider.GetRequiredService<SneedexService>();
 
         Torrents.PropertyChanged += (_, e) =>
         {
@@ -119,20 +121,34 @@ public partial class WindowViewModel : ObservableObject
             searchString += $"?f={SelectedFilter.Id}&c={SelectedCategory.Id}&q={SearchQuery}&s={SelectedSorting}&o={SelectedOrder}";
         }
         else
+        {
             searchString = href;
+        }
+
+        (List<Torrent> torrents, List<PageButton> pages, string resultsString) result;
 
         try
         {
             token.ThrowIfCancellationRequested();
-            (List<Torrent> torrents, List<PageButton> pages, string resultsString) = await Nyaa.Search(searchString, token);
-            Torrents.AddRange(torrents);
-            Pages.AddRange(pages);
-            ResultsString = resultsString;
+            result = await Nyaa.Search(searchString, token);
         }
         catch (OperationCanceledException)
         {
             new Notification("Search cancelled by user.", type:NotificationType.Error).Send();
+            return;
         }
+
+        if (SettingsService.AppSettings.SneedexIntegration)
+        {
+            foreach (Torrent torrent in result.torrents)
+            {
+                torrent.IsBestRelease = await _sneedexService.IsBestRelease(torrent.Id);
+            }
+        }
+
+        Torrents.AddRange(result.torrents);
+        Pages.AddRange(result.pages);
+        ResultsString = result.resultsString;
 
         if (Torrents.Count > 0 && TorrentsView.IsEmpty)
         {
@@ -192,6 +208,21 @@ public partial class WindowViewModel : ObservableObject
             Link.Open(torrent.Magnet);
             await Task.Delay(100);
         }
+    }
+
+    [RelayCommand]
+    private void OpenSneedexEntry(int nyaaId)
+    {
+        string? entryId = _sneedexService.GetEntryId(nyaaId);
+
+        if (string.IsNullOrEmpty(entryId))
+        {
+            new Notification("Couldn't retrieve the sneedex entry id.", type: NotificationType.Error)
+                .Send();
+            return;
+        }
+
+        Link.Open($"https://sneedex.moe/?{entryId}");
     }
 
     [RelayCommand(CanExecute = nameof(CanCheckIsAllSelectedExecute))]
@@ -274,11 +305,12 @@ public partial class WindowViewModel : ObservableObject
                 Seeders = "1",
                 Size = "1 GiB",
                 IsDownloading = true,
-                IsSelected = true
+                IsSelected = true,
+                IsBestRelease = true
             },
             new Torrent
             {
-                Category = "Test",
+                Category = "1_1",
                 Name = "Test",
                 Comments = 0,
                 Date = DateTime.Now - TimeSpan.FromDays(1),
@@ -288,7 +320,8 @@ public partial class WindowViewModel : ObservableObject
                 Seeders = "0",
                 Size = "1 GiB",
                 IsDownloading = false,
-                IsSelected = false
+                IsSelected = false,
+                IsBestRelease = false
             }
         ];
         List<PageButton> pages =

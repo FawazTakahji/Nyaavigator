@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using NLog;
 using Nyaavigator.Builders;
 using Nyaavigator.Enums;
+using Nyaavigator.Extensions;
 using Nyaavigator.Utilities;
 
 namespace Nyaavigator.Models;
@@ -26,11 +27,13 @@ public partial class Torrent : TorrentBase
     public string? Href { get; set; }
     public string? Magnet { get; set; }
     public string? Link => string.IsNullOrEmpty(Href) ? null : $"https://nyaa.si/{Href.TrimStart('/')}";
+    public int Id => string.IsNullOrEmpty(Href) ? 0 : Href.TryGetEndingInt();
 
     [ObservableProperty]
     private bool _isDownloading;
     [ObservableProperty]
     private bool _isSelected;
+    public bool IsBestRelease { get; set; }
 
     [RelayCommand(IncludeCancelCommand = true)]
     public async Task OpenDownloadDialog(CancellationToken token)

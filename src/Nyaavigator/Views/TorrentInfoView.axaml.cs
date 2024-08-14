@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
@@ -169,14 +167,5 @@ public partial class TorrentInfoView : UserControl, IRecipient<InfoViewMessage>
             Mode = BindingMode.OneWay
         };
         ScrollViewer.Bind(PaddingProperty, paddingBinding);
-    }
-
-    // If the user scrolls to the top using the button and then closes the description expander while the comments expander is offscreen,
-    // then the items inside the repeater will be invisible.
-    private async void VisibilityBug(object? sender, RoutedEventArgs e)
-    {
-        CommentsRepeater.SetValue(IsVisibleProperty, false);
-        await Task.Delay(1);
-        CommentsRepeater.SetValue(IsVisibleProperty, true);
     }
 }

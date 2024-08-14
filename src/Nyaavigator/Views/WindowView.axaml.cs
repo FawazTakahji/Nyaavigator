@@ -4,10 +4,8 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Messages;
 using Nyaavigator.Models;
-using Nyaavigator.Services;
 using Nyaavigator.ViewModels;
 
 namespace Nyaavigator.Views;
@@ -15,13 +13,11 @@ namespace Nyaavigator.Views;
 public partial class WindowView : Window, IRecipient<NotificationMessage>
 {
     private WindowNotificationManager _notificationManager;
-    private readonly SneedexService _sneedexService;
 
     public WindowView()
     {
         InitializeComponent();
         DataContext = new WindowViewModel();
-        _sneedexService = App.ServiceProvider.GetRequiredService<SneedexService>();
 
         WeakReferenceMessenger.Default.Register<NotificationMessage>(this);
 

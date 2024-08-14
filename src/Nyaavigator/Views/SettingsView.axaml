@@ -15,7 +15,8 @@
         <vms:SettingsViewModel />
     </Design.DataContext>
 
-    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}" RowDefinitions="Auto, Auto, *">
+    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+          RowDefinitions="Auto, Auto, *">
         <Grid Grid.Row="0"
               Margin="10,5,5,10"
               ColumnDefinitions="Auto, *">
@@ -32,7 +33,8 @@
                     Content="{mi:MaterialIconExt Close, Size=20}" />
         </Grid>
 
-        <Separator Grid.Row="1" Background="{DynamicResource SeparatorBrush}" />
+        <Separator Grid.Row="1"
+                   Background="{DynamicResource SeparatorBrush}" />
 
         <ScrollViewer Grid.Row="2">
             <StackPanel Spacing="2">
@@ -43,7 +45,8 @@
                 </StackPanel.Styles>
 
                 <!--  Theme Expander  -->
-                <ui:SettingsExpander Header="App Theme" IconSource="DarkTheme">
+                <ui:SettingsExpander Header="App Theme"
+                                     IconSource="DarkTheme">
                     <ui:SettingsExpander.Footer>
                         <ComboBox SelectedItem="{Binding SettingsService.AppSettings.Theme}">
                             <enums:Theme>System</enums:Theme>
@@ -55,14 +58,17 @@
                 <!--  Theme Expander  -->
 
                 <!--  Accent Expander  -->
-                <ui:SettingsExpander Name="AccentExpander" Header="App Accent">
+                <ui:SettingsExpander Name="AccentExpander"
+                                     Header="App Accent">
                     <ui:SettingsExpander.Footer>
-                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
                             <ui:ColorPickerButton IsAlphaEnabled="False"
                                                   IsVisible="{Binding !SettingsService.AppSettings.SystemAccent}"
                                                   Color="{Binding SettingsService.AppSettings.AccentColor}" />
 
-                            <CheckBox Content="System Accent" IsChecked="{Binding SettingsService.AppSettings.SystemAccent}" />
+                            <CheckBox Content="System Accent"
+                                      IsChecked="{Binding SettingsService.AppSettings.SystemAccent}" />
                         </StackPanel>
                     </ui:SettingsExpander.Footer>
                 </ui:SettingsExpander>
@@ -73,7 +79,8 @@
                                      Description="Add a star icon next to a torrent's name if the torrent is in the sneedex.moe list."
                                      Header="Sneedex Integration">
                     <ui:SettingsExpander.Footer>
-                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
                             <Button Padding="5"
                                     Command="{StaticResource OpenLinkCommand}"
                                     CommandParameter="https://sneedex.moe"
@@ -113,7 +120,8 @@
                                      Header="Check Updates"
                                      IsClickEnabled="True">
                     <ui:SettingsExpander.Footer>
-                        <CheckBox Content="Check On Startup" IsChecked="{Binding SettingsService.AppSettings.CheckUpdates}" />
+                        <CheckBox Content="Check On Startup"
+                                  IsChecked="{Binding SettingsService.AppSettings.CheckUpdates}" />
                     </ui:SettingsExpander.Footer>
                 </ui:SettingsExpander>
                 <!--  Updates Expander  -->

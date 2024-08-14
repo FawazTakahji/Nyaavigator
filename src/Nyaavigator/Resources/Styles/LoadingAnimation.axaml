@@ -6,7 +6,8 @@
         <Setter Property="Kind" Value="Loading" />
 
         <Style.Animations>
-            <Animation IterationCount="INFINITE" Duration="0:0:0.75">
+            <Animation IterationCount="INFINITE"
+                       Duration="0:0:0.75">
                 <KeyFrame Cue="0%">
                     <Setter Property="RotateTransform.Angle" Value="0.0" />
                 </KeyFrame>

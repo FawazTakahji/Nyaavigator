@@ -11,7 +11,6 @@ namespace Nyaavigator.Utilities;
 internal static class Settings
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-    private static readonly JsonSerializerOptions SerializerOptions = new() { WriteIndented = true };
 
     public static Models.Settings LoadSettings()
     {
@@ -46,7 +45,7 @@ internal static class Settings
         string path = Path.Combine(App.BaseDirectory, "Settings.json");
         try
         {
-            string json = JsonSerializer.Serialize(settings, SerializerOptions);
+            string json = JsonSerializer.Serialize(settings, Singletons.SerializerOptions);
             File.WriteAllText(path, json);
         }
         catch (Exception ex)

@@ -97,7 +97,9 @@ public partial class App : Application
 
         serviceCollection.AddSingleton<SettingsService>();
         serviceCollection.AddSingleton<SneedexService>();
+        serviceCollection.AddSingleton<FeedService>();
         serviceCollection.AddTransient<LogsViewModel>();
+        serviceCollection.AddSingleton<FollowViewModel>();
 
         Version version = typeof(App).Assembly.GetName().Version.GetMajorMinorBuild();
         string userAgent = $"Nyaavigator/{version} ({RuntimeInformation.OSDescription}; {RuntimeInformation.RuntimeIdentifier})";

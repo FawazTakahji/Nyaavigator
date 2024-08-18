@@ -1,14 +1,12 @@
 using System;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
-using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
-using FluentAvalonia.UI.Controls;
 using Markdown.Avalonia;
 using Nyaavigator.Commands;
 using Nyaavigator.Converters;
@@ -18,24 +16,8 @@ using Nyaavigator.ViewModels;
 
 namespace Nyaavigator.Views;
 
-public partial class TorrentInfoView : UserControl, IRecipient<InfoViewMessage>
+public partial class TorrentInfoView : DialogViewBase, IRecipient<InfoViewMessage>
 {
-    private TaskCompletionSource _tcs;
-    private DialogHost _host;
-    private IInputElement? _lastFocus;
-
-// for previewer
-#if DEBUG
-    public TorrentInfoView()
-    {
-        InitializeComponent();
-        DataContext = new TorrentInfoViewModel(Utilities.UI.GetFakeInfo());
-        WeakReferenceMessenger.Default.Register<InfoViewMessage>(this);
-        CloseButton.Click += (_, _) => Hide();
-        ScrollButton.Click += (_, _) => { ScrollViewer.ScrollToHome(); };
-    }
-#endif
-
     public TorrentInfoView(TorrentInfoViewModel viewModel)
     {
         InitializeComponent();
@@ -43,6 +25,33 @@ public partial class TorrentInfoView : UserControl, IRecipient<InfoViewMessage>
         WeakReferenceMessenger.Default.Register<InfoViewMessage>(this);
         CloseButton.Click += (_, _) => Hide();
         ScrollButton.Click += (_, _) => { ScrollViewer.ScrollToHome(); };
+    }
+
+    protected override void Hide()
+    {
+        if (_lastFocus != null)
+        {
+            _lastFocus.Focus();
+            _lastFocus = null;
+        }
+
+        var viewModel = (TorrentInfoViewModel)DataContext;
+        if (viewModel.GetInfoCancelCommand.CanExecute(null))
+            viewModel.GetInfoCancelCommand.Execute(null);
+        DataContext = null;
+
+        OverlayLayer? overlayLayer = OverlayLayer.GetOverlayLayer(_host);
+        overlayLayer?.Children.Remove(_host);
+        _host.Content = null;
+
+        _tcs?.TrySetResult();
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        CloseButton.Focus();
     }
 
     public void Receive(InfoViewMessage message)
@@ -61,66 +70,6 @@ public partial class TorrentInfoView : UserControl, IRecipient<InfoViewMessage>
         };
         flyout.ShowAt(this);
         DispatcherTimer.RunOnce(() => flyout.Hide(), TimeSpan.FromSeconds(3));
-    }
-
-    public async Task Show()
-    {
-        _tcs = new TaskCompletionSource();
-
-        _host = new DialogHost
-        {
-            Content = this
-        };
-        OverlayLayer? overlayLayer = OverlayLayer.GetOverlayLayer(App.TopLevel);
-        if (overlayLayer == null)
-            return;
-
-        _lastFocus = App.TopLevel.FocusManager?.GetFocusedElement();
-        overlayLayer.Children.Add(_host);
-
-        this.Loaded += (_, _) => CloseButton.Focus();
-
-        await _tcs.Task;
-    }
-
-    private void Hide()
-    {
-        if (_lastFocus != null)
-        {
-            _lastFocus.Focus();
-            _lastFocus = null;
-        }
-
-        var viewModel = (TorrentInfoViewModel)DataContext;
-        if (viewModel.GetInfoCancelCommand.CanExecute(null))
-            viewModel.GetInfoCancelCommand.Execute(null);
-        DataContext = null;
-
-        OverlayLayer? overlayLayer = OverlayLayer.GetOverlayLayer(_host);
-        if (overlayLayer == null)
-            return;
-
-        overlayLayer.Children.Remove(_host);
-        _host.Content = null;
-
-        _tcs.TrySetResult();
-    }
-
-    protected override void OnKeyUp(KeyEventArgs e)
-    {
-        if (e.Handled)
-        {
-            base.OnKeyUp(e);
-            return;
-        }
-
-        if (e.Key == Key.Escape)
-        {
-            Hide();
-            e.Handled = true;
-        }
-
-        base.OnKeyUp(e);
     }
 
     private void ExpandItem(object? sender, SelectionChangedEventArgs e)
@@ -168,4 +117,16 @@ public partial class TorrentInfoView : UserControl, IRecipient<InfoViewMessage>
         };
         ScrollViewer.Bind(PaddingProperty, paddingBinding);
     }
+
+    // for previewer
+#if DEBUG
+    public TorrentInfoView()
+    {
+        InitializeComponent();
+        DataContext = new TorrentInfoViewModel(Utilities.UI.GetFakeInfo());
+        WeakReferenceMessenger.Default.Register<InfoViewMessage>(this);
+        CloseButton.Click += (_, _) => Hide();
+        ScrollButton.Click += (_, _) => { ScrollViewer.ScrollToHome(); };
+    }
+#endif
 }

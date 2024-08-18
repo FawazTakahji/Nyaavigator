@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="Nyaavigator.Views.NewReleasesView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:data="clr-namespace:FluentAvalonia.UI.Data;assembly=FluentAvalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:models="clr-namespace:Nyaavigator.Models"
+             xmlns:viewModels="clr-namespace:Nyaavigator.ViewModels"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="viewModels:NewReleasesViewModel"
+             mc:Ignorable="d">
+    <Design.DataContext>
+        <viewModels:NewReleasesViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <data:CollectionViewSource x:Key="ReleasesView"
+                                   Filter="{Binding Filter}"
+                                   Source="{Binding Releases}">
+            <data:CollectionViewSource.SortDescriptions>
+                <data:SortDescription x:DataType="models:NewReleases"
+                                      Property="{Binding User}" />
+            </data:CollectionViewSource.SortDescriptions>
+        </data:CollectionViewSource>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+          RowDefinitions="Auto, Auto, *">
+        <Grid Grid.Row="0"
+              RowDefinitions="Auto, Auto">
+            <Grid Grid.Row="0"
+                  Margin="10,5,5,10"
+                  ColumnDefinitions="Auto, *">
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Text="New Releases" />
+
+                <Button Name="CloseButton"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Classes="accent"
+                        Content="{mi:MaterialIconExt Close, Size=20}" />
+            </Grid>
+
+            <TextBox Grid.Row="1"
+                     Margin="5"
+                     Text="{Binding FilterText}"
+                     Watermark="Filter" />
+        </Grid>
+
+        <Separator Grid.Row="1"
+                   Background="{DynamicResource SeparatorBrush}" />
+
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Source={StaticResource ReleasesView}, Path=View}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:NewReleases">
+                        <Expander IsExpanded="True">
+                            <Expander.Styles>
+                                <Style Selector="Expander:down /template/ ToggleButton#ExpanderHeader /template/ ContentPresenter#ContentPresenter">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+
+                                <Style Selector="Expander:down /template/ ToggleButton#ExpanderHeader /template/ Border#Root">
+                                    <Setter Property="Padding" Value="16,0" />
+                                </Style>
+                            </Expander.Styles>
+
+                            <Expander.Header>
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding User}"
+                                           Theme="{StaticResource TitleTextBlockStyle}" />
+                            </Expander.Header>
+
+                            <ItemsControl ItemsSource="{Binding Releases}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:RssRelease">
+                                        <Grid Margin="0,0,0,5"
+                                              ColumnDefinitions="*, Auto">
+                                            <TextBlock Grid.Column="0"
+                                                       Margin="0,0,5,0"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding Title, FallbackValue=''}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       ToolTip.Tip="{Binding Title, FallbackValue=''}" />
+
+                                            <SplitButton Grid.Column="1"
+                                                         HorizontalAlignment="Right"
+                                                         VerticalAlignment="Center"
+                                                         Command="{Binding $parent[ItemsControl].((viewModels:FollowViewModel)DataContext).ShowMoreInfoCommand}"
+                                                         CommandParameter="{Binding Link}"
+                                                         IsVisible="{Binding Title, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                <mi:MaterialIcon Kind="OpenInNew" />
+
+                                                <SplitButton.Flyout>
+                                                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                                        <MenuItem Command="{StaticResource OpenLinkCommand}"
+                                                                  CommandParameter="{Binding Link, Mode=OneWay}"
+                                                                  Header="Open in Browser"
+                                                                  Icon="{mi:MaterialIconExt OpenInApp}" />
+                                                    </MenuFlyout>
+                                                </SplitButton.Flyout>
+                                            </SplitButton>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

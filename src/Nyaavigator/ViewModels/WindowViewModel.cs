@@ -101,7 +101,7 @@ public partial class WindowViewModel : ObservableObject
         }
 
         TorrentInfoViewModel viewModel = new(link);
-        await new TorrentInfoView(viewModel).Show();
+        await new TorrentInfoView(viewModel).ShowAsync();
     }
 
     [RelayCommand(IncludeCancelCommand = true, CanExecute = nameof(CanSearchExecute))]

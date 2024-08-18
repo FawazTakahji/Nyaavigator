@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Input;
+﻿using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Material.Icons;
@@ -8,11 +6,8 @@ using Nyaavigator.ViewModels;
 
 namespace Nyaavigator.Views;
 
-public partial class SettingsView : UserControl
+public partial class SettingsView : DialogViewBase
 {
-    private DialogHost _host;
-    private IInputElement? _lastFocus;
-
     public SettingsView()
     {
         InitializeComponent();
@@ -28,55 +23,10 @@ public partial class SettingsView : UserControl
         RepoExpander.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Github)) };
     }
 
-    public void Show()
+    protected override void OnLoaded(RoutedEventArgs e)
     {
-        _host = new DialogHost
-        {
-            Content = this
-        };
+        base.OnLoaded(e);
 
-        OverlayLayer? overlayLayer = OverlayLayer.GetOverlayLayer(App.TopLevel);
-        if (overlayLayer == null)
-            return;
-
-        _lastFocus = App.TopLevel.FocusManager?.GetFocusedElement();
-        overlayLayer.Children.Add(_host);
-
-        this.Loaded += (_, _) => CloseButton.Focus();
-    }
-
-    private void Hide()
-    {
-        if (_lastFocus != null)
-        {
-            _lastFocus.Focus();
-            _lastFocus = null;
-        }
-
-        DataContext = null;
-
-        OverlayLayer? overlayLayer = OverlayLayer.GetOverlayLayer(_host);
-        if (overlayLayer == null)
-            return;
-
-        overlayLayer.Children.Remove(_host);
-        _host.Content = null;
-    }
-
-    protected override void OnKeyUp(KeyEventArgs e)
-    {
-        if (e.Handled)
-        {
-            base.OnKeyUp(e);
-            return;
-        }
-
-        if (e.Key == Key.Escape)
-        {
-            Hide();
-            e.Handled = true;
-        }
-
-        base.OnKeyUp(e);
+        CloseButton.Focus();
     }
 }

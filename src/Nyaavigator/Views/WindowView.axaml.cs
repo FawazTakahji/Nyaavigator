@@ -3,7 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Messages;
 using Nyaavigator.Models;
 using Nyaavigator.ViewModels;
@@ -12,6 +14,7 @@ namespace Nyaavigator.Views;
 
 public partial class WindowView : Window, IRecipient<NotificationMessage>
 {
+    public RelayCommand<string> ShowViewCommand { get; }
     private WindowNotificationManager _notificationManager;
 
     public WindowView()
@@ -20,11 +23,27 @@ public partial class WindowView : Window, IRecipient<NotificationMessage>
         DataContext = new WindowViewModel();
 
         WeakReferenceMessenger.Default.Register<NotificationMessage>(this);
+        ShowViewCommand = new RelayCommand<string>(ShowView);
+    }
 
-        SettingsButton.Click += (_, _) =>
+    private static void ShowView(string? view)
+    {
+        switch (view)
         {
-            new SettingsView().Show();
-        };
+            case "Settings":
+            {
+                new SettingsView().Show();
+                break;
+            }
+            case "Following":
+            {
+                new FollowView
+                {
+                    DataContext = App.ServiceProvider.GetRequiredService<FollowViewModel>()
+                }.Show();
+                break;
+            }
+        }
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:models="clr-namespace:Nyaavigator.Models"
+        xmlns:views="clr-namespace:Nyaavigator.Views"
         xmlns:vms="clr-namespace:Nyaavigator.ViewModels"
         Title="Nyaavigator"
         MinWidth="{OnPlatform Default=804, Windows=770}"
@@ -23,14 +24,24 @@
               Grid.Column="0"
               Margin="0,5,0,0"
               ColumnDefinitions="Auto, Auto, Auto, *, Auto, Auto">
-            <!--  Settings Button  -->
-            <Button Name="SettingsButton"
-                    Grid.Row="0"
+            <Button Grid.Row="0"
                     Grid.Column="0"
                     Margin="2,0,1,0"
                     VerticalAlignment="Stretch"
-                    Content="{mi:MaterialIconExt Cogs, Size=20}" />
-            <!--  Settings Button  -->
+                    Content="{mi:MaterialIconExt Menu, Size=20}">
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                        <MenuItem Command="{Binding $parent[views:WindowView].ShowViewCommand}"
+                                  CommandParameter="Settings"
+                                  Header="Settings"
+                                  Icon="{mi:MaterialIconExt Cogs}" />
+                        <MenuItem Command="{Binding $parent[views:WindowView].ShowViewCommand}"
+                                  CommandParameter="Following"
+                                  Header="Following"
+                                  Icon="{mi:MaterialIconExt Heart}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
 
             <!--  Filters Combobox  -->
             <ComboBox Grid.Row="0"

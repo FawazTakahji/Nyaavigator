@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
@@ -44,6 +45,13 @@ public partial class TorrentInfoView : DialogViewBase, IRecipient<InfoViewMessag
         _host.Content = null;
 
         _tcs?.TrySetResult();
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        CloseButton.Focus();
     }
 
     public void Receive(InfoViewMessage message)

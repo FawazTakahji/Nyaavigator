@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="Nyaavigator.Views.FollowView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:data="clr-namespace:FluentAvalonia.UI.Data;assembly=FluentAvalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:models="clr-namespace:Nyaavigator.Models"
+             xmlns:viewModels="clr-namespace:Nyaavigator.ViewModels"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="viewModels:FollowViewModel"
+             mc:Ignorable="d">
+    <Design.DataContext>
+        <viewModels:FollowViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <data:CollectionViewSource x:Key="FeedsView"
+                                   Filter="{Binding Filter}"
+                                   Source="{Binding FeedService.Feeds}">
+            <data:CollectionViewSource.SortDescriptions>
+                <data:SortDescription x:DataType="models:Feed"
+                                      Property="{Binding User}" />
+            </data:CollectionViewSource.SortDescriptions>
+        </data:CollectionViewSource>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+          RowDefinitions="Auto, Auto, *">
+        <Grid Grid.Row="0"
+              RowDefinitions="Auto, Auto">
+            <Grid Grid.Row="0"
+                  Margin="10,5,5,10"
+                  ColumnDefinitions="Auto, *">
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Text="Following" />
+
+                <Button Name="CloseButton"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Classes="accent"
+                        Content="{mi:MaterialIconExt Close, Size=20}" />
+            </Grid>
+
+            <Grid Grid.Row="1"
+                  Margin="5"
+                  RowDefinitions="Auto, Auto">
+                <TextBox Grid.Row="0"
+                         Text="{Binding FilterText}"
+                         Watermark="Filter" />
+
+                <Grid Grid.Row="1"
+                      Margin="0,5,0,0"
+                      ColumnDefinitions="*, Auto, Auto">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding NewUserText}"
+                             Watermark="Follow New User" />
+                    <Button Grid.Column="1"
+                            Width="118"
+                            Height="32"
+                            Margin="5,0"
+                            Classes="accent"
+                            Command="{Binding $parent[UserControl].((viewModels:FollowViewModel)DataContext).FollowUserCommand}">
+                        <Panel>
+                            <TextBlock IsVisible="{Binding !$parent[UserControl].((viewModels:FollowViewModel)DataContext).FollowUserCommand.IsRunning}"
+                                       Text="Follow" />
+                            <controls:ProgressRing Width="1"
+                                                   Height="1"
+                                                   IsVisible="{Binding $parent[UserControl].((viewModels:FollowViewModel)DataContext).FollowUserCommand.IsRunning}" />
+                        </Panel>
+                    </Button>
+
+                    <Button Grid.Column="2"
+                            Width="138"
+                            Height="32"
+                            Classes="accent"
+                            Command="{Binding $parent[UserControl].((viewModels:FollowViewModel)DataContext).CheckAllReleasesCommand}">
+                        <Panel>
+                            <TextBlock IsVisible="{Binding !$parent[UserControl].((viewModels:FollowViewModel)DataContext).CheckAllReleasesCommand.IsRunning}"
+                                       Text="Check All Releases" />
+                            <controls:ProgressRing Width="1"
+                                                   Height="1"
+                                                   IsVisible="{Binding $parent[UserControl].((viewModels:FollowViewModel)DataContext).CheckAllReleasesCommand.IsRunning}" />
+                        </Panel>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Separator Grid.Row="1"
+                   Background="{DynamicResource SeparatorBrush}" />
+
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Source={StaticResource FeedsView}, Path=View}">
+                <ItemsControl.Styles>
+                    <Style Selector="Expander:down /template/ ToggleButton#ExpanderHeader /template/ Border#ExpandCollapseChevronBorder">
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                </ItemsControl.Styles>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:Feed">
+                        <Expander Collapsing="Expander_Collapsing"
+                                  IsExpanded="True">
+                            <Expander.Styles>
+                                <Style Selector="Expander:down /template/ ToggleButton#ExpanderHeader /template/ ContentPresenter#ContentPresenter">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+
+                                <Style Selector="Expander:down /template/ ToggleButton#ExpanderHeader /template/ Border#Root">
+                                    <Setter Property="Padding" Value="16,0" />
+                                </Style>
+                            </Expander.Styles>
+
+                            <Expander.Header>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding User}"
+                                               Theme="{StaticResource TitleTextBlockStyle}" />
+
+                                    <StackPanel Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal"
+                                                Spacing="5">
+                                        <Button Width="118"
+                                                Height="32"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:FollowViewModel)DataContext).CheckUserReleasesCommand}"
+                                                CommandParameter="{Binding User}">
+                                            <Panel>
+                                                <TextBlock IsVisible="{Binding !$parent[ItemsControl].((viewModels:FollowViewModel)DataContext).CheckUserReleasesCommand.IsRunning}"
+                                                           Text="Check Releases" />
+                                                <controls:ProgressRing Width="1"
+                                                                       Height="1"
+                                                                       IsVisible="{Binding $parent[ItemsControl].((viewModels:FollowViewModel)DataContext).CheckUserReleasesCommand.IsRunning}" />
+                                            </Panel>
+                                        </Button>
+                                        <Button Classes="accent"
+                                                Command="{Binding $parent[ItemsControl].((viewModels:FollowViewModel)DataContext).UnfollowUserCommand}"
+                                                CommandParameter="{Binding User}"
+                                                Content="Unfollow" />
+                                    </StackPanel>
+                                </Grid>
+                            </Expander.Header>
+
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock Grid.Column="0"
+                                           Margin="0,0,5,0"
+                                           VerticalAlignment="Center"
+                                           Text="{Binding LatestRelease.Title, FallbackValue=''}"
+                                           TextTrimming="CharacterEllipsis"
+                                           ToolTip.Tip="{Binding LatestRelease.Title, FallbackValue=''}" />
+
+                                <SplitButton Grid.Column="1"
+                                             HorizontalAlignment="Right"
+                                             VerticalAlignment="Center"
+                                             Command="{Binding $parent[ItemsControl].((viewModels:FollowViewModel)DataContext).ShowMoreInfoCommand}"
+                                             CommandParameter="{Binding LatestRelease.Link}"
+                                             IsVisible="{Binding LatestRelease, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <mi:MaterialIcon Kind="OpenInNew" />
+
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                            <MenuItem Command="{StaticResource OpenLinkCommand}"
+                                                      CommandParameter="{Binding LatestRelease.Link, Mode=OneWay}"
+                                                      Header="Open in Browser"
+                                                      Icon="{mi:MaterialIconExt OpenInApp}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+                            </Grid>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

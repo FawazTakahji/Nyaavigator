@@ -50,7 +50,6 @@ public partial class WindowViewModel : ObservableObject
         SelectedFilter = Filters[0];
         SelectedCategory = Categories[0];
 
-        // TODO: settings should be its own service
         SettingsService = App.ServiceProvider.GetRequiredService<SettingsService>();
         _sneedexService = App.ServiceProvider.GetRequiredService<SneedexService>();
 

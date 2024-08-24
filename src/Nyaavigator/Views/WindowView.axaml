@@ -12,7 +12,7 @@
         MinHeight="510"
         x:DataType="vms:WindowViewModel"
         Icon="/Assets/Icon.ico"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="Manual"
         mc:Ignorable="d">
     <Design.DataContext>
         <vms:WindowViewModel />

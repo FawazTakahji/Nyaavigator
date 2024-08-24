@@ -19,6 +19,7 @@ using Nyaavigator.Services;
 using Nyaavigator.Utilities;
 using Nyaavigator.ViewModels;
 using Nyaavigator.Views;
+using Window = Avalonia.Controls.Window;
 
 namespace Nyaavigator;
 

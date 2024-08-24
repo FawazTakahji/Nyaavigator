@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Messages;
 using Nyaavigator.Models;
 using Nyaavigator.ViewModels;
+using WindowHelper = Nyaavigator.Utilities.Window;
 
 namespace Nyaavigator.Views;
 
@@ -24,6 +25,7 @@ public partial class WindowView : Window, IRecipient<NotificationMessage>
 
         WeakReferenceMessenger.Default.Register<NotificationMessage>(this);
         ShowViewCommand = new RelayCommand<string>(ShowView);
+        WindowHelper.RestoreLocation(this);
     }
 
     private static void ShowView(string? view)
@@ -60,6 +62,8 @@ public partial class WindowView : Window, IRecipient<NotificationMessage>
     {
         App.LogsViewer?.Close();
         base.OnClosing(e);
+
+        WindowHelper.SaveLocation(this);
     }
 
     public void Receive(NotificationMessage message)

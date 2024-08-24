@@ -175,7 +175,7 @@
                   CellTheme="{StaticResource DataGridCellEx}"
                   DoubleTapped="DataGrid_DoubleTapped"
                   IsVisible="{Binding Torrents.Count, Mode=OneWay}"
-                  ItemsSource="{Binding TorrentsView}"
+                  ItemsSource="{Binding Torrents}"
                   RowTheme="{StaticResource DataGridRowEx}"
                   Theme="{StaticResource DataGridEx}">
             <DataGrid.Styles>
@@ -211,7 +211,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <CheckBox Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).CheckSelectedCommand}"
                                       DoubleTapped="DoubleTapBlock"
                                       IsChecked="{Binding IsSelected}" />
@@ -225,7 +225,7 @@
                                         MaxWidth="80"
                                         Header="Category">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <Image Width="80"
                                    Height="28"
                                    Margin="0,5"
@@ -241,7 +241,7 @@
                                         CellStyleClasses="Padding"
                                         Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <Grid ColumnDefinitions="*, Auto, Auto">
                                 <!--  Text  -->
                                 <SelectableTextBlock Grid.Column="0"
@@ -326,7 +326,7 @@
                                         MaxWidth="85"
                                         Header="Links">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <Grid HorizontalAlignment="Center"
                                   ColumnDefinitions="Auto, Auto">
                                 <!--  Download Button  -->
@@ -367,7 +367,7 @@
                                         CellStyleClasses="Padding"
                                         Header="Size">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -381,7 +381,7 @@
                 <DataGridTemplateColumn Width="Auto"
                                         Header="Date">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -400,7 +400,7 @@
                                          ToolTip.Tip="Seeders" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -418,7 +418,7 @@
                                          ToolTip.Tip="Leechers" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"
@@ -437,7 +437,7 @@
                                          ToolTip.Tip="Downloads" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="models:Torrent">
+                        <DataTemplate>
                             <SelectableTextBlock HorizontalAlignment="Center"
                                                  Classes="CellText"
                                                  DoubleTapped="DoubleTapBlock"

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Collections;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -44,9 +42,6 @@ public partial class WindowViewModel : ObservableObject
     public SmartCollection<PageButton> Pages { get; } = [];
     [ObservableProperty]
     private string _resultsString = string.Empty;
-
-    [ObservableProperty]
-    private DataGridCollectionView _torrentsView;
     public SettingsService SettingsService { get; }
     private readonly SneedexService _sneedexService;
 
@@ -73,18 +68,6 @@ public partial class WindowViewModel : ObservableObject
                 CheckSelectedCommand.NotifyCanExecuteChanged();
             }
         };
-
-        TorrentsView = new DataGridCollectionView(Torrents, true, true)
-        {
-            Filter = item => !SettingsService.AppSettings.HideTorrentsWithNoSeeders || ((Torrent)item).Seeders != "0"
-        };
-
-        TorrentsView.CollectionChanged += (_, _) =>
-        {
-            CheckIsAllSelectedCommand.NotifyCanExecuteChanged();
-        };
-
-        SettingsService.AppSettings.PropertyChanged += OnHideTorrentsChanged;
 
 #if DEBUG
         Dispatcher.UIThread.InvokeAsync(CreateDebugItems);
@@ -146,11 +129,13 @@ public partial class WindowViewModel : ObservableObject
             }
         }
 
-        Torrents.AddRange(result.torrents);
+        Torrents.AddRange(SettingsService.AppSettings.HideTorrentsWithNoSeeders
+            ? result.torrents.Where(t => t.Seeders != "0")
+            : result.torrents);
         Pages.AddRange(result.pages);
         ResultsString = result.resultsString;
 
-        if (Torrents.Count > 0 && TorrentsView.IsEmpty)
+        if (result.torrents.Count > 0 && Torrents.Count == 0)
         {
             new Notification("Results Hidden",
                 "You have \"Hide torrents with no seeders\" enabled. To see all results, disable this setting.",
@@ -232,12 +217,12 @@ public partial class WindowViewModel : ObservableObject
     {
         if (IsAllSelected == true)
         {
-            foreach (Torrent torrent in TorrentsView)
+            foreach (Torrent torrent in Torrents)
                 torrent.IsSelected = true;
         }
         else
         {
-            foreach (Torrent torrent in TorrentsView)
+            foreach (Torrent torrent in Torrents)
                 torrent.IsSelected = false;
         }
     }
@@ -253,40 +238,7 @@ public partial class WindowViewModel : ObservableObject
             IsAllSelected = null;
     }
 
-    private void OnHideTorrentsChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(SettingsService.AppSettings.HideTorrentsWithNoSeeders))
-            return;
-
-        TorrentsView.Refresh();
-
-        switch (TorrentsView.IsEmpty)
-        {
-            case true when IsAllSelected is null or true:
-            {
-                IsAllSelected = false;
-                foreach (Torrent torrent in Torrents)
-                {
-                    torrent.IsSelected = false;
-                }
-
-                break;
-            }
-            case false when IsAllSelected is null or true:
-            {
-                foreach (Torrent torrent in Torrents)
-                {
-                    if (!TorrentsView.Contains(torrent))
-                        torrent.IsSelected = false;
-                }
-                CheckSelected();
-
-                break;
-            }
-        }
-    }
-
-    private bool CanCheckIsAllSelectedExecute => !TorrentsView.IsEmpty && !DownloadTorrentsCommand.IsRunning;
+    private bool CanCheckIsAllSelectedExecute => Torrents.Count > 0 && !DownloadTorrentsCommand.IsRunning;
     private bool CanCheckSelectedExecute => !Torrents.IsAnyTorrentDownloading;
     private bool CanSearchExecute => !Torrents.IsAnyTorrentDownloading;
 

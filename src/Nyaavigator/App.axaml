@@ -34,7 +34,6 @@
     </Application.Styles>
 
     <Application.Resources>
-        <!--  Themes  -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="../Resources/Themes/DataGridEx.axaml" />
@@ -42,9 +41,9 @@
                 <ResourceInclude Source="../Resources/Themes/DataGridCellEx.axaml" />
                 <ResourceInclude Source="../Resources/Themes/ScrollBarEx.axaml" />
                 <ResourceInclude Source="../Resources/ThemeResources.axaml" />
+                <ResourceInclude Source="Resources/Icons.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        <!--  Themes  -->
 
         <!--  Converters  -->
         <converters.Level:LevelToIcon x:Key="LevelToIcon" />

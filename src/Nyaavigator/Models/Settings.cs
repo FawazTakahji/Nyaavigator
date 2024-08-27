@@ -18,6 +18,7 @@ public partial class Settings : ObservableObject
     private bool _hideTorrentsWithNoSeeders;
     [ObservableProperty]
     private bool _sneedexIntegration;
+    public QBittorrentSettings QBittorrentSettings { get; set; } = new();
 
     // Stop the previewer from spamming GitHub api
     [ObservableProperty]

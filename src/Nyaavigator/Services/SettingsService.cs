@@ -10,12 +10,19 @@ public class SettingsService
     public SettingsService()
     {
         AppSettings = SettingsUtils.LoadSettings();
-
         SettingsUtils.ApplySettings(AppSettings);
 
         AppSettings.PropertyChanged += (_, _) =>
         {
             SettingsUtils.ApplySettings(AppSettings);
+            SettingsUtils.SaveSettings(AppSettings);
+        };
+        AppSettings.QBittorrentSettings.PropertyChanged += (_, _) =>
+        {
+            SettingsUtils.SaveSettings(AppSettings);
+        };
+        AppSettings.QBittorrentSettings.Tags.CollectionChanged += (_, _) =>
+        {
             SettingsUtils.SaveSettings(AppSettings);
         };
     }

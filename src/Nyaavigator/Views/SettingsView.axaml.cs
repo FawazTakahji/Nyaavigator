@@ -1,4 +1,5 @@
-﻿using Avalonia.Interactivity;
+﻿using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Material.Icons;
@@ -21,6 +22,13 @@ public partial class SettingsView : DialogViewBase
         FolderExpander.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Folder)) };
         UpdatesExpander.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Sync)) };
         RepoExpander.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Github)) };
+
+        QBittorrentHostExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Server)) };
+        QBittorrentPortExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Ethernet)) };
+        QBittorrentUsernameExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Person)) };
+        QBittorrentPasswordExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Key)) };
+        QBittorrentFolderExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Folder)) };
+        QBittorrentCategoryExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Category)) };
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -28,5 +36,14 @@ public partial class SettingsView : DialogViewBase
         base.OnLoaded(e);
 
         CloseButton.Focus();
+    }
+
+    private void QBittorrentTagTextBox_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled || e.Key != Key.Enter || DataContext is not SettingsViewModel vm)
+            return;
+
+        if (vm.QBittorrentAddTagCommand.CanExecute(null))
+            vm.QBittorrentAddTagCommand.Execute(null);
     }
 }

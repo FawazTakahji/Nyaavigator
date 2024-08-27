@@ -74,6 +74,117 @@
                 </ui:SettingsExpander>
                 <!--  Accent Expander  -->
 
+                <!--  QBittorrent Expander  -->
+                <ui:SettingsExpander Name="QBittorrentExpander"
+                                     Header="qBittorrent">
+                    <ui:SettingsExpander.Styles>
+                        <Style Selector="TextBox.TextField">
+                            <Setter Property="MinWidth" Value="500" />
+                        </Style>
+                    </ui:SettingsExpander.Styles>
+
+                    <ui:SettingsExpander.IconSource>
+                        <ui:PathIconSource Data="{StaticResource QBittorrentIcon}" />
+                    </ui:SettingsExpander.IconSource>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentHostExpanderItem"
+                                             Content="Host">
+                        <ui:SettingsExpanderItem.Footer>
+                            <TextBox Classes="TextField clearButton"
+                                     Text="{Binding SettingsService.AppSettings.QBittorrentSettings.Host}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentPortExpanderItem"
+                                             Content="Port">
+                        <ui:SettingsExpanderItem.Footer>
+                            <NumericUpDown FormatString="0"
+                                           Maximum="65535"
+                                           Value="{Binding SettingsService.AppSettings.QBittorrentSettings.Port}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentUsernameExpanderItem"
+                                             Content="Username">
+                        <ui:SettingsExpanderItem.Footer>
+                            <TextBox Classes="TextField clearButton"
+                                     Text="{Binding SettingsService.AppSettings.QBittorrentSettings.Username}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentPasswordExpanderItem"
+                                             Content="Password">
+                        <ui:SettingsExpanderItem.Footer>
+                            <TextBox Classes="revealPasswordButton TextField"
+                                     PasswordChar="•"
+                                     Text="{Binding SettingsService.AppSettings.QBittorrentSettings.Password}" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentFolderExpanderItem"
+                                             Content="Folder">
+                        <ui:SettingsExpanderItem.Footer>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBox Grid.Column="0"
+                                         MinWidth="425"
+                                         Margin="0,0,5,0"
+                                         Classes="clearButton"
+                                         Text="{Binding SettingsService.AppSettings.QBittorrentSettings.Folder}"
+                                         Watermark="Default Folder" />
+                                <Button Grid.Column="1"
+                                        Command="{Binding QBittorrentSelectFolderCommand}"
+                                        Content="Browse" />
+                            </Grid>
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <ui:SettingsExpanderItem x:Name="QBittorrentCategoryExpanderItem"
+                                             Content="Category">
+                        <ui:SettingsExpanderItem.Footer>
+                            <TextBox Classes="clearButton TextField"
+                                     Text="{Binding SettingsService.AppSettings.QBittorrentSettings.Category}"
+                                     Watermark="Uncategorized" />
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
+                    <Grid ColumnDefinitions="*, Auto"
+                          RowDefinitions="Auto, *">
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="0"
+                                 KeyDown="QBittorrentTagTextBox_OnKeyDown"
+                                 Text="{Binding QBittorrentTagText}"
+                                 Watermark="Add Tag" />
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Command="{Binding QBittorrentAddTagCommand}"
+                                Content="Add" />
+
+                        <ItemsControl Grid.Row="1"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="0,5,0,0"
+                                      ItemsSource="{Binding SettingsService.AppSettings.QBittorrentSettings.Tags}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Margin="5"
+                                            Padding="5"
+                                            Classes="accent"
+                                            Command="{Binding $parent[UserControl].((vms:SettingsViewModel)DataContext).QBittorrentRemoveTagCommand}"
+                                            CommandParameter="{Binding}"
+                                            Content="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ui:SettingsExpander>
+                <!--  QBittorrent Expander  -->
+
                 <!--  Sneedex Expander  -->
                 <ui:SettingsExpander Name="SneedexExpander"
                                      Description="Add a star icon next to a torrent's name if the torrent is in the sneedex.moe list."

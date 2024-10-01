@@ -30,7 +30,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="ErrorOr" Version="2.0.1" />
     <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.64" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.67" />
     <PackageReference Include="Markdown.Avalonia.Tight" Version="11.0.2" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />

@@ -7,6 +7,7 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ErrorOr;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Enums;
 using Nyaavigator.Models;
@@ -193,6 +194,83 @@ public partial class WindowViewModel : ObservableObject
 
             Link.Open(torrent.Magnet);
             await Task.Delay(100);
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddTorrentsToQBittorrent()
+    {
+        Torrent[] selectedTorrents = Torrents.Where(t => t.IsSelected).ToArray();
+        List<string> validTorrents = [];
+
+        foreach (Torrent torrent in selectedTorrents)
+        {
+            if (string.IsNullOrEmpty(torrent.Magnet))
+            {
+                Dialog.Create()
+                    .Type(DialogType.Error)
+                    .Content($"Couldn't add the magnet link for \"{torrent.Name}\" because it's invalid.")
+                    .ShowAndForget();
+                continue;
+            }
+
+            validTorrents.Add(torrent.Magnet);
+        }
+
+        if (validTorrents.Count == 0)
+        {
+            new Notification("No valid magnet links selected.", type: NotificationType.Error)
+                .Send();
+            return;
+        }
+
+        ErrorOr<Success> result = await Utilities.QBittorrent.AddTorrents(validTorrents, SettingsService.AppSettings.QBittorrentSettings);
+        if (result.IsError)
+        {
+            await Dialog.Create()
+                .Type(DialogType.Error)
+                .Content($"{result.FirstError.Description}")
+                .Show();
+
+            if (result.FirstError.Metadata?["Exception"] is Exception ex)
+            {
+                Logger.Error(ex, "An error occurred while adding torrents to QBittorrent.");
+            }
+        }
+        else
+        {
+            new Notification("Success", "Torrents added to QBittorrent.", NotificationType.Success)
+                .Send();
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddTorrentToQBittorrent(string? magnet)
+    {
+        if (string.IsNullOrEmpty(magnet))
+        {
+            await Dialog.Create()
+                .Type(DialogType.Error)
+                .Content("Magnet link is invalid.")
+                .Show();
+            return;
+        }
+
+        ErrorOr<Success> result = await Utilities.QBittorrent.AddTorrents([magnet], SettingsService.AppSettings.QBittorrentSettings);
+        if (result.IsError)
+        {
+            await Dialog.Create()
+                .Type(DialogType.Error)
+                .Content($"{result.FirstError.Description}")
+                .Show();
+
+            if (result.FirstError.Metadata?["Exception"] is Exception ex)
+                Logger.Error(ex, "An error occurred while adding torrent to QBittorrent.");
+        }
+        else
+        {
+            new Notification("Success", "Torrent added to QBittorrent.", NotificationType.Success)
+                .Send();
         }
     }
 

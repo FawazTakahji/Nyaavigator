@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Nyaavigator.Enums;
 
 namespace Nyaavigator.Models;
 
@@ -9,6 +10,8 @@ public partial class QBittorrentSettings : ObservableObject
     private string _host = "localhost";
     [ObservableProperty]
     private int _port = 8084;
+    [ObservableProperty]
+    private Protocol _protocol;
     [ObservableProperty]
     private string _username = "admin";
     [ObservableProperty]

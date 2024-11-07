@@ -104,6 +104,16 @@
                         </ui:SettingsExpanderItem.Footer>
                     </ui:SettingsExpanderItem>
 
+                    <ui:SettingsExpanderItem x:Name="QBittorrentProtocolExpanderItem"
+                                             Content="Protocol">
+                        <ui:SettingsExpanderItem.Footer>
+                            <ComboBox SelectedItem="{Binding SettingsService.AppSettings.QBittorrentSettings.Protocol}">
+                                <enums:Protocol>Http</enums:Protocol>
+                                <enums:Protocol>Https</enums:Protocol>
+                            </ComboBox>
+                        </ui:SettingsExpanderItem.Footer>
+                    </ui:SettingsExpanderItem>
+
                     <ui:SettingsExpanderItem x:Name="QBittorrentUsernameExpanderItem"
                                              Content="Username">
                         <ui:SettingsExpanderItem.Footer>

@@ -306,6 +306,13 @@
                                                       CommandParameter="{Binding Link, Mode=OneWay}"
                                                       Header="Open in Browser"
                                                       Icon="{mi:MaterialIconExt OpenInApp}" />
+                                            <MenuItem Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).AddTorrentToQBittorrentCommand}"
+                                                      CommandParameter="{Binding Magnet, Mode=OneWay}"
+                                                      Header="Add to QBittorrent">
+                                                <MenuItem.Icon>
+                                                    <PathIcon Data="{StaticResource QBittorrentIcon}" />
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                             <MenuItem Command="{Binding $parent[DataGrid].((vms:WindowViewModel)DataContext).ShowMoreInfoCommand}"
                                                       CommandParameter="{Binding Link, Mode=OneWay}"
                                                       Header="More Info"
@@ -461,20 +468,27 @@
                                  Path="!!Torrents.Count" />
                         <Binding Mode="OneWay"
                                  Path="!Torrents.IsAnyTorrentDownloading" />
+                        <Binding Path="!AddTorrentsToQBittorrentCommand.IsRunning" />
                     </MultiBinding.Bindings>
                 </MultiBinding>
             </Separator.IsVisible>
         </Separator>
         <!--  Separator  -->
 
-        <!--  Downloading Indicator  -->
+        <!--  Indicator  -->
         <ProgressBar Grid.Row="2"
                      Grid.Column="0"
                      Height="1"
                      Margin="0,0,0,1"
-                     IsIndeterminate="True"
-                     IsVisible="{Binding Torrents.IsAnyTorrentDownloading}" />
-        <!--  Downloading Indicator  -->
+                     IsIndeterminate="True">
+            <ProgressBar.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                    <Binding Path="Torrents.IsAnyTorrentDownloading" />
+                    <Binding Path="AddTorrentsToQBittorrentCommand.IsRunning" />
+                </MultiBinding>
+            </ProgressBar.IsVisible>
+        </ProgressBar>
+        <!--  Indicator  -->
 
         <!--  Buttons And Results Text  -->
         <Grid Grid.Row="3"
@@ -536,16 +550,26 @@
             <!--  Results Text  -->
 
             <!--  Magnets Button  -->
-            <Button Grid.Column="2"
-                    Margin="5,0"
-                    Command="{Binding OpenMagnetsCommand}"
-                    IsEnabled="{Binding IsAllSelected}">
-                <StackPanel Orientation="Horizontal"
-                            Spacing="5">
-                    <mi:MaterialIcon Kind="Magnet" />
-                    <TextBlock Text="Open Selected" />
+            <SplitButton Grid.Column="2"
+                            Margin="5,0"
+                            Command="{Binding OpenMagnetsCommand}"
+                            IsEnabled="{Binding IsAllSelected}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <mi:MaterialIcon Kind="Magnet" Width="20" Height="20" />
+                    <TextBlock Text="Open Selected" VerticalAlignment="Center" />
                 </StackPanel>
-            </Button>
+
+                <SplitButton.Flyout>
+                    <MenuFlyout Placement="TopEdgeAlignedRight">
+                        <MenuItem Header="Add Selected to QBittorrent"
+                                  Command="{Binding AddTorrentsToQBittorrentCommand}">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource QBittorrentIcon}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
             <!--  Magnets Button  -->
         </Grid>
         <!--  Buttons And Results Text  -->

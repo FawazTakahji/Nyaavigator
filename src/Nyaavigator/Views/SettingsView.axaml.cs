@@ -25,6 +25,7 @@ public partial class SettingsView : DialogViewBase
 
         QBittorrentHostExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Server)) };
         QBittorrentPortExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Ethernet)) };
+        QBittorrentProtocolExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Protocol)) };
         QBittorrentUsernameExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Person)) };
         QBittorrentPasswordExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Key)) };
         QBittorrentFolderExpanderItem.IconSource = new PathIconSource { Data = Geometry.Parse(MaterialIconDataProvider.GetData(MaterialIconKind.Folder)) };

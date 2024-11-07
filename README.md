@@ -47,12 +47,15 @@ To delete the package you enter the following command `sudo apt remove nyaavigat
 * [AsyncAwaitBestPractices](https://github.com/brminnick/AsyncAwaitBestPractices)
 * [Avalonia](https://github.com/AvaloniaUI/Avalonia)
 * [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet)
+* [ErrorOr](https://github.com/amantinband/error-or)
 * [FluentAvalonia](https://github.com/amwx/FluentAvalonia)
 * [Html Agility Pack](https://github.com/zzzprojects/html-agility-pack)
 * [Markdown.Avalonia](https://github.com/whistyun/Markdown.Avalonia)
 * [Material.Icons](https://github.com/SKProCH/Material.Icons)
 * [NLog](https://github.com/NLog/NLog)
 * [Pictogrammers](https://pictogrammers.com)
+* [qbittorrent-net-client ](https://github.com/fedarovich/qbittorrent-net-client)
+* [Simple Icons](https://simpleicons.org)
 
 ## Screenshots
 ![App Homepage](assets/screenshot01.png)

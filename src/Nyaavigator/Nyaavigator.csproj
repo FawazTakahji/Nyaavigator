@@ -35,7 +35,7 @@
     <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="NLog" Version="5.3.4" />
-    <PackageReference Include="QBittorrent.Client" Version="1.9.23349.1" />
+    <PackageReference Include="QBittorrent.Client" Version="1.9.24285.1" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
   </ItemGroup>
 

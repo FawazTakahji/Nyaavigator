@@ -12,7 +12,7 @@ Package: Nyaavigator
 Version: ${version}
 Essential: no
 Priority: optional
-Maintainer: Fawaz Takhji <fawaztakhji1233212004@gmail.com>
+Maintainer: Fawaz Takahji <fawaztakhji1233212004@gmail.com>
 Architecture: amd64
 Description: An app for browsing nyaa.si.
 Depends: xdg-utils

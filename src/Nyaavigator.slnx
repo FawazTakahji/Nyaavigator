@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Avalonia Properties/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/Platforms/">
+    <Project Path="Nyaavigator.Android/Nyaavigator.Android.csproj" />
+    <Project Path="Nyaavigator.Browser/Nyaavigator.Browser.csproj" />
+    <Project Path="Nyaavigator.iOS/Nyaavigator.iOS.csproj" />
+    <Project Path="Nyaavigator.Win32/Nyaavigator.Win32.csproj" />
+  </Folder>
+  <Project Path="Nyaavigator.Avalonia/Nyaavigator.Avalonia.csproj" />
+  <Project Path="Nyaavigator.Core/Nyaavigator.Core.csproj" />
+</Solution>

@@ -1,7 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Browser;
+using Avalonia.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Avalonia;
+using Nyaavigator.Core.Extensions;
 
 internal sealed partial class Program
 {
@@ -10,5 +14,15 @@ internal sealed partial class Program
         .StartBrowserAppAsync("out");
 
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>();
+    {
+        if (!Design.IsDesignMode)
+        {
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                    .AddCoreServices()
+                    .BuildServiceProvider());
+        }
+
+        return AppBuilder.Configure<App>();
+    }
 }

@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Nyaavigator.Avalonia.Views;
 
-public partial class MainView : UserControl
+public partial class SettingsView : UserControl
 {
-    public MainView()
+    public SettingsView()
     {
         InitializeComponent();
     }

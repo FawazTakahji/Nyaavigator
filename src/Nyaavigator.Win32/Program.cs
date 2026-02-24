@@ -1,6 +1,10 @@
 ﻿using System;
 using Avalonia;
+using Avalonia.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Avalonia;
+using Nyaavigator.Core.Extensions;
 
 namespace Nyaavigator.Win32;
 
@@ -15,8 +19,18 @@ sealed class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        if (!Design.IsDesignMode)
+        {
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                    .AddCoreServices()
+                    .BuildServiceProvider());
+        }
+
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+    }
 }

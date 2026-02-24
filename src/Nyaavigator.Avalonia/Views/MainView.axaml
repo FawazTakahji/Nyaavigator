@@ -1,18 +1,21 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl x:Class="Nyaavigator.Avalonia.Views.MainView"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="clr-namespace:Nyaavigator.Avalonia"
              xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
              x:DataType="viewModels:MainViewModel"
-             x:Class="Nyaavigator.Avalonia.Views.MainView">
+             mc:Ignorable="d">
     <Design.DataContext>
         <ui:DesignServiceLocator Type="viewModels:MainViewModel" />
     </Design.DataContext>
-    <UserControl.DataTemplates>
-        <ui:ViewLocator />
-    </UserControl.DataTemplates>
 
-    <ContentControl Content="{Binding NavigationService.Current}" />
+    <ContentControl Content="{Binding NavigationService.Current}">
+        <ContentControl.DataTemplates>
+            <ui:ViewLocator />
+        </ContentControl.DataTemplates>
+    </ContentControl>
 </UserControl>

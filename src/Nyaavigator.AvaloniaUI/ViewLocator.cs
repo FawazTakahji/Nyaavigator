@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Nyaavigator.Avalonia.Views;
+using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.Core.Navigation;
 using Nyaavigator.Core.ViewModels;
 
-namespace Nyaavigator.Avalonia;
+namespace Nyaavigator.AvaloniaUI;
 
 public class ViewLocator : IDataTemplate
 {

@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Nyaavigator.Avalonia;
+using Nyaavigator.AvaloniaUI;
 using Nyaavigator.Core.Extensions;
 
 namespace Nyaavigator.Win32;

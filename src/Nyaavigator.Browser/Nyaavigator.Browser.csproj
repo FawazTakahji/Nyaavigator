@@ -12,6 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nyaavigator.Avalonia\Nyaavigator.Avalonia.csproj"/>
+        <ProjectReference Include="..\Nyaavigator.AvaloniaUI\Nyaavigator.AvaloniaUI.csproj" />
     </ItemGroup>
 </Project>

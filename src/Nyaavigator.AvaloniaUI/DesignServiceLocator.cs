@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Core.Extensions;
 
-namespace Nyaavigator.Avalonia;
+namespace Nyaavigator.AvaloniaUI;
 
 public class DesignServiceLocator : MarkupExtension
 {

@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Nyaavigator.Avalonia.Views;
+namespace Nyaavigator.AvaloniaUI.Views;
 
 public partial class MainWindow : Window
 {

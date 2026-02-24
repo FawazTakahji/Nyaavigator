@@ -1,8 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
-namespace Nyaavigator.Avalonia.Views;
+namespace Nyaavigator.AvaloniaUI.Views;
 
 public partial class MainView : UserControl
 {

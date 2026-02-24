@@ -3,10 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Nyaavigator.Avalonia.Views;
+using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.Core.ViewModels;
 
-namespace Nyaavigator.Avalonia;
+namespace Nyaavigator.AvaloniaUI;
 
 public partial class App : Application
 {
@@ -21,12 +21,11 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-#if DEBUG
         if (Design.IsDesignMode)
         {
             DesignServiceLocator.BuildProvider();
         }
-#endif
+
         MainView view = new MainView
         {
             DataContext = Ioc.Default.GetRequiredService<MainViewModel>()

@@ -17,4 +17,6 @@ public partial class SettingsViewModel : ViewModelBase, INavigable
     {
         _navigationService.NavigateTo<SearchViewModel>();
     }
+
+    public string Title { get; } = "Settings";
 }

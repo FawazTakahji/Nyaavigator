@@ -5,5 +5,18 @@
              RequestedThemeVariant="Default">
     <Application.Styles>
         <semi:SemiTheme Locale="en-US" />
+        <StyleInclude Source="/Controls/Index.axaml" />
+
+        <Style Selector="Button.HeaderButton">
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Theme" Value="{StaticResource BorderlessButton}" />
+
+            <Style Selector="^ &gt; PathIcon">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="18" />
+            </Style>
+        </Style>
     </Application.Styles>
 </Application>

@@ -1,0 +1,52 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nyaavigator.AvaloniaUI.Controls">
+    <Design.PreviewWith>
+        <Border Width="500"
+                Height="128"
+                Padding="20">
+            <controls:ViewHeader Title="Title">
+                <controls:ViewHeader.LeftContent>
+                    <TextBlock Text="Left Content" />
+                </controls:ViewHeader.LeftContent>
+                <controls:ViewHeader.RightContent>
+                    <TextBlock Text="Right Content" />
+                </controls:ViewHeader.RightContent>
+            </controls:ViewHeader>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ViewHeader">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Height="64"
+                        Margin="0"
+                        Padding="16,0"
+                        BorderThickness="0,0,0,1"
+                        CornerRadius="0"
+                        Theme="{StaticResource CardBorder}">
+                    <Grid ColumnDefinitions="*, Auto, *">
+                        <ContentPresenter Grid.Column="0"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding LeftContent}" />
+
+                        <TextBlock Grid.Column="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Classes="H4"
+                                   FontWeight="Bold"
+                                   Text="{TemplateBinding Title}"
+                                   Theme="{StaticResource TitleTextBlock}" />
+
+                        <ContentPresenter Grid.Column="2"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding RightContent}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

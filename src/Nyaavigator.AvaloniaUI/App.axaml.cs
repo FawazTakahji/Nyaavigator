@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -21,11 +20,6 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (Design.IsDesignMode)
-        {
-            DesignServiceLocator.BuildProvider();
-        }
-
         MainView view = new MainView
         {
             DataContext = Ioc.Default.GetRequiredService<MainViewModel>()

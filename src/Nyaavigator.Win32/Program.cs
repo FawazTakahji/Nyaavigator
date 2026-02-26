@@ -1,6 +1,5 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.AvaloniaUI;
@@ -21,14 +20,11 @@ sealed class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
     {
-        if (!Design.IsDesignMode)
-        {
-            Ioc.Default.ConfigureServices(
-                new ServiceCollection()
-                    .AddCoreServices()
-                    .AddDesktopServices()
-                    .BuildServiceProvider());
-        }
+        Ioc.Default.ConfigureServices(
+            new ServiceCollection()
+                .AddCoreServices()
+                .AddDesktopServices()
+                .BuildServiceProvider());
 
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()

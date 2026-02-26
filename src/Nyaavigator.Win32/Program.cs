@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.AvaloniaUI;
+using Nyaavigator.Core.Desktop.Extensions;
 using Nyaavigator.Core.Extensions;
 
 namespace Nyaavigator.Win32;
@@ -25,6 +26,7 @@ sealed class Program
             Ioc.Default.ConfigureServices(
                 new ServiceCollection()
                     .AddCoreServices()
+                    .AddDesktopServices()
                     .BuildServiceProvider());
         }
 

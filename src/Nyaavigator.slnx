@@ -9,5 +9,6 @@
     <Project Path="Nyaavigator.Win32/Nyaavigator.Win32.csproj" />
   </Folder>
   <Project Path="Nyaavigator.AvaloniaUI/Nyaavigator.AvaloniaUI.csproj" />
+  <Project Path="Nyaavigator.Core.Desktop/Nyaavigator.Core.Desktop.csproj" />
   <Project Path="Nyaavigator.Core/Nyaavigator.Core.csproj" />
 </Solution>

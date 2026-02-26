@@ -20,5 +20,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Nyaavigator.AvaloniaUI\Nyaavigator.AvaloniaUI.csproj" />
+        <ProjectReference Include="..\Nyaavigator.Core.Desktop\Nyaavigator.Core.Desktop.csproj" />
     </ItemGroup>
+
+    <Target Name="CreatePortableFolder" AfterTargets="PrepareForRun" Condition="'$(Configuration)' == 'Debug'">
+        <MakeDir Directories="$(OutputPath)portable" />
+    </Target>
 </Project>

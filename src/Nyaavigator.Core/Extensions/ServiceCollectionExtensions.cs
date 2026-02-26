@@ -8,11 +8,10 @@ public static class CoreServices
 {
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<SearchViewModel>();
-        services.AddSingleton<SettingsViewModel>();
+        return services.AddSingleton<MainViewModel>()
+            .AddSingleton<SearchViewModel>()
+            .AddSingleton<SettingsViewModel>()
 
-        services.AddSingleton<NavigationService>();
-        return services;
+            .AddSingleton<NavigationService>();
     }
 }

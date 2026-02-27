@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Nyaavigator.AvaloniaUI.Views;
+using Nyaavigator.AvaloniaUI.Windows;
 using Nyaavigator.Core.ViewModels;
 
 namespace Nyaavigator.AvaloniaUI;

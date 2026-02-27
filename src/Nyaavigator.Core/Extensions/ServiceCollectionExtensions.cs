@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Core.Navigation;
+using Nyaavigator.Core.Settings;
 using Nyaavigator.Core.ViewModels;
 
 namespace Nyaavigator.Core.Extensions;
@@ -12,6 +13,7 @@ public static class CoreServices
             .AddSingleton<SearchViewModel>()
             .AddSingleton<SettingsViewModel>()
 
-            .AddSingleton<NavigationService>();
+            .AddSingleton<NavigationService>()
+            .AddSingleton<SettingsService>();
     }
 }

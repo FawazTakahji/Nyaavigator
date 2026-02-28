@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Nyaavigator.Core.Settings;assembly=Nyaavigator.Core"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -13,6 +14,28 @@
         <ui:DesignServiceLocator Type="viewModels:SettingsViewModel" />
     </Design.DataContext>
 
-    <Button Command="{Binding GoSearchCommand}"
-            Content="Go Search" />
+    <StackPanel Margin="16"
+                HorizontalAlignment="Center"
+                Spacing="8">
+        <TextBlock HorizontalAlignment="Center">
+            <Run Text="Theme:" />
+            <Run Text="{Binding SettingsService.Settings.Theme}" />
+        </TextBlock>
+        <StackPanel HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="8">
+            <Button Command="{Binding SetThemeCommand}"
+                    CommandParameter="{x:Static settings:Theme.System}"
+                    Content="System" />
+            <Button Command="{Binding SetThemeCommand}"
+                    CommandParameter="{x:Static settings:Theme.Light}"
+                    Content="Light" />
+            <Button Command="{Binding SetThemeCommand}"
+                    CommandParameter="{x:Static settings:Theme.Dark}"
+                    Content="Dark" />
+        </StackPanel>
+
+        <Button Command="{Binding SaveCommand}"
+                Content="Save" />
+    </StackPanel>
 </UserControl>

@@ -3,6 +3,7 @@ using Avalonia;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.AvaloniaUI;
+using Nyaavigator.AvaloniaUI.Extensions;
 using Nyaavigator.Core.Desktop.Extensions;
 using Nyaavigator.Core.Extensions;
 
@@ -24,6 +25,7 @@ sealed class Program
             new ServiceCollection()
                 .AddCoreServices()
                 .AddDesktopServices()
+                .AddUiServices()
                 .BuildServiceProvider());
 
         return AppBuilder.Configure<App>()

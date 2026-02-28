@@ -15,7 +15,7 @@ public partial class SearchViewModel : ViewModelBase, INavigable
     [RelayCommand]
     private void GoSettings()
     {
-        _navigationService.NavigateTo<SettingsViewModel>();
+        _navigationService.Push<SettingsViewModel>();
     }
 
     public string Title { get; } = "Search";

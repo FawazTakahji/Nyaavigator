@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Android.Extensions;
 using Nyaavigator.AvaloniaUI;
+using Nyaavigator.AvaloniaUI.Extensions;
 using Nyaavigator.Core.Extensions;
 
 namespace Nyaavigator.Android;
@@ -19,6 +20,7 @@ public class Application : AvaloniaAndroidApplication<App>
             new ServiceCollection()
                 .AddCoreServices()
                 .AddAndroidServices()
+                .AddUiServices()
                 .BuildServiceProvider());
     }
 

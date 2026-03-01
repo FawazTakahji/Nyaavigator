@@ -1,0 +1,123 @@
+﻿using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Metadata;
+
+namespace Nyaavigator.AvaloniaUI.Controls;
+
+[PseudoClasses($"{PressedClass}, {ClickableClass}")]
+public class SettingsItem : TemplatedControl
+{
+    private const string PressedClass = ":pressed";
+    private const string ClickableClass = ":clickable";
+
+    public static readonly StyledProperty<string> HeaderProperty =
+        AvaloniaProperty.Register<SettingsItem, string>(nameof(Header));
+
+    public static readonly StyledProperty<string?> DescriptionProperty =
+        AvaloniaProperty.Register<SettingsItem, string?>(nameof(Description));
+
+    public static readonly StyledProperty<StreamGeometry?> IconProperty =
+        AvaloniaProperty.Register<SettingsItem, StreamGeometry?>(nameof(Icon));
+
+    public static readonly StyledProperty<ICommand?> CommandProperty =
+        AvaloniaProperty.Register<SettingsItem, ICommand?>(nameof(Command));
+
+    public static readonly StyledProperty<object?> ContentProperty =
+        AvaloniaProperty.Register<SettingsItem, object?>(nameof(Content));
+
+    public string Header
+    {
+        get => GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+
+    public string? Description
+    {
+        get => GetValue(DescriptionProperty);
+        set => SetValue(DescriptionProperty, value);
+    }
+
+    public StreamGeometry? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public ICommand? Command
+    {
+        get => GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
+
+    [Content]
+    public object? Content
+    {
+        get => GetValue(ContentProperty);
+        set => SetValue(ContentProperty, value);
+    }
+
+    private ContentPresenter? _contentPart;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _contentPart = e.NameScope.Find<ContentPresenter>("PART_ContentPresenter");
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == CommandProperty)
+        {
+            PseudoClasses.Set(ClickableClass, change.NewValue is ICommand);
+        }
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        if (e.Handled || _contentPart is not null && _contentPart.IsPointerOver)
+        {
+            return;
+        }
+
+        if (Command != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            PseudoClasses.Add(PressedClass);
+            e.Pointer.Capture(this);
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        if (!Equals(e.Pointer.Captured, this))
+        {
+            return;
+        }
+
+        PseudoClasses.Remove(PressedClass);
+        e.Pointer.Capture(null);
+
+        if (new Rect(Bounds.Size).Contains(e.GetPosition(this))
+            && Command?.CanExecute(null) == true)
+        {
+            Command.Execute(null);
+        }
+
+        e.Handled = true;
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        PseudoClasses.Remove(PressedClass);
+    }
+}

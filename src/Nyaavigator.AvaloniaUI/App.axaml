@@ -5,6 +5,7 @@
              RequestedThemeVariant="Default">
     <Application.Styles>
         <semi:SemiTheme Locale="en-US" />
+        <semi:UrsaSemiTheme Locale="en-US" />
         <StyleInclude Source="/Controls/Index.axaml" />
 
         <Style Selector="Button.HeaderButton">

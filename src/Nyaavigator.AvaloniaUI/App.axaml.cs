@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Nyaavigator.AvaloniaUI.Views;
@@ -29,6 +30,7 @@ public partial class App : Application
         {
             DataContext = Ioc.Default.GetRequiredService<MainViewModel>()
         };
+        view.Loaded += MainView_Loaded;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -36,16 +38,23 @@ public partial class App : Application
             {
                 Content = view
             };
-            TopLevel = desktop.MainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             singleViewPlatform.MainView = view;
-            TopLevel = TopLevel.GetTopLevel(singleViewPlatform.MainView);
         }
 
-        Ioc.Default.GetRequiredService<IAppManager>().Initialize();
-
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void MainView_Loaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control control)
+        {
+            TopLevel = TopLevel.GetTopLevel(control);
+            Ioc.Default.GetRequiredService<IAppManager>().Initialize();
+
+            control.Loaded -= MainView_Loaded;
+        }
     }
 }

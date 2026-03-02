@@ -3,4 +3,5 @@
 public interface INavigable
 {
     public string Title { get; }
+    public void OnNavigatedFrom();
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Interactivity;
 using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.AvaloniaUI.Views.Settings;
 using Nyaavigator.Core.Navigation;
@@ -33,6 +34,7 @@ public class ViewLocator : IDataTemplate
         if (view is not null)
         {
             view.DataContext = navigable;
+            view.Unloaded += View_Unloaded;
             _cache.Add(navigable, view);
         }
 
@@ -42,5 +44,13 @@ public class ViewLocator : IDataTemplate
     public bool Match(object? data)
     {
         return data is INavigable;
+    }
+
+    private void View_Unloaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control { DataContext: INavigable navigable })
+        {
+            navigable.OnNavigatedFrom();
+        }
     }
 }

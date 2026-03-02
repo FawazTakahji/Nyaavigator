@@ -1,11 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Nyaavigator.Core.Navigation;
 using Nyaavigator.Core.Services;
 using Nyaavigator.Core.Settings;
 
 namespace Nyaavigator.Core.ViewModels;
 
-public partial class SettingsViewModel : ViewModelBase, INavigable
+public partial class SettingsViewModel : NavigationViewModelBase
 {
     public SettingsService SettingsService { get; set; }
     private readonly IAppManager _appManager;
@@ -27,5 +26,17 @@ public partial class SettingsViewModel : ViewModelBase, INavigable
         SettingsService.Save();
     }
 
-    public string Title { get; } = "Settings";
+    public override void OnNavigatedFrom()
+    {
+        try
+        {
+            Save();
+        }
+        catch (Exception e)
+        {
+            // TODO: add logging
+        }
+    }
+
+    public override string Title { get; } = "Settings";
 }

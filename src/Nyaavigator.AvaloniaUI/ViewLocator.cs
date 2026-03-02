@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Nyaavigator.AvaloniaUI.Views;
+using Nyaavigator.AvaloniaUI.Views.Settings;
 using Nyaavigator.Core.Navigation;
 using Nyaavigator.Core.ViewModels;
 

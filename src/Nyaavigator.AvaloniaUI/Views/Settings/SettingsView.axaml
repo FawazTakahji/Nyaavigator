@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Nyaavigator.AvaloniaUI.Views.Settings.SettingsView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Nyaavigator.AvaloniaUI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings1="clr-namespace:Nyaavigator.AvaloniaUI.Views.Settings"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
+             xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="viewModels:SettingsViewModel"
+             mc:Ignorable="d">
+    <Design.DataContext>
+        <ui:DesignServiceLocator Type="viewModels:SettingsViewModel" />
+    </Design.DataContext>
+
+    <Panel>
+        <Panel.Styles>
+            <Style Selector="ScrollViewer#RootScrollViewer.Blur">
+                <Setter Property="Effect" Value="blur(10)" />
+            </Style>
+        </Panel.Styles>
+        <ScrollViewer Name="RootScrollViewer"
+                      Classes.Blur="{Binding #SettingsDrawer.IsInModalStatus}">
+            <StackPanel>
+                <controls:SettingsItem Command="{Binding RelativeSource={RelativeSource AncestorType=settings1:SettingsView}, Path=OpenThemeSelectorCommand}"
+                                       Header="Theme"
+                                       Icon="{StaticResource SemiIconContrast}">
+                    <TextBlock Text="{Binding SettingsService.Settings.Theme}" />
+                </controls:SettingsItem>
+            </StackPanel>
+        </ScrollViewer>
+
+        <u:OverlayDialogHost x:Name="SettingsDrawer"
+                             HostId="SettingsDrawerHost" />
+    </Panel>
+</UserControl>

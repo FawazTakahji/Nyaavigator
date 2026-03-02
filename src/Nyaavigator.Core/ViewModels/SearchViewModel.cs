@@ -3,7 +3,7 @@ using Nyaavigator.Core.Navigation;
 
 namespace Nyaavigator.Core.ViewModels;
 
-public partial class SearchViewModel : NavigationViewModelBase
+public partial class SearchViewModel : ViewModelBase, INavigable
 {
     private readonly NavigationService _navigationService;
 
@@ -18,5 +18,5 @@ public partial class SearchViewModel : NavigationViewModelBase
         _navigationService.Push<SettingsViewModel>();
     }
 
-    public override string Title { get; } = "Search";
+    public string Title { get; } = "Search";
 }

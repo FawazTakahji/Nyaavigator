@@ -7,11 +7,13 @@ namespace Nyaavigator.Core.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase, INavigable
 {
-    public SettingsService SettingsService { get; set; }
+    public NavigationService NavigationService { get; }
+    public SettingsService SettingsService { get; }
     private readonly IAppManager _appManager;
 
-    public SettingsViewModel(SettingsService settingsService, IAppManager appManager)
+    public SettingsViewModel(NavigationService navigationService, SettingsService settingsService, IAppManager appManager)
     {
+        NavigationService = navigationService;
         SettingsService = settingsService;
         _appManager = appManager;
     }
@@ -38,6 +40,4 @@ public partial class SettingsViewModel : ViewModelBase, INavigable
             // TODO: add logging
         }
     }
-
-    public string Title { get; } = "Settings";
 }

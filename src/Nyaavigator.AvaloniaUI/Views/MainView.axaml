@@ -1,10 +1,8 @@
 ﻿<UserControl x:Class="Nyaavigator.AvaloniaUI.Views.MainView"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:Nyaavigator.AvaloniaUI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:navigation="clr-namespace:Nyaavigator.Core.Navigation;assembly=Nyaavigator.Core"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -15,49 +13,14 @@
         <ui:DesignServiceLocator Type="viewModels:MainViewModel" />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto, *">
-        <Grid.Resources>
-            <PageSlide x:Key="PageSlide"
-                       Orientation="Horizontal"
+    <TransitioningContentControl Content="{Binding NavigationService.Current}"
+                                 IsTransitionReversed="{Binding NavigationService.IsGoingBack}">
+        <TransitioningContentControl.DataTemplates>
+            <ui:ViewLocator />
+        </TransitioningContentControl.DataTemplates>
+        <TransitioningContentControl.PageTransition>
+            <PageSlide Orientation="Horizontal"
                        Duration="0:00:00.300" />
-        </Grid.Resources>
-        <TransitioningContentControl Grid.Row="0"
-                                     Content="{Binding NavigationService.Current}"
-                                     IsTransitionReversed="{Binding NavigationService.IsGoingBack}"
-                                     PageTransition="{StaticResource PageSlide}">
-            <TransitioningContentControl.DataTemplates>
-                <DataTemplate DataType="navigation:INavigable">
-                    <controls:ViewHeader Title="{Binding Title}">
-                        <controls:ViewHeader.LeftContent>
-                            <Button HorizontalAlignment="Left"
-                                    Classes="HeaderButton Tertiary"
-                                    Command="{Binding $parent[TransitioningContentControl].((viewModels:MainViewModel)DataContext).NavigationService.PopCommand}"
-                                    IsVisible="{Binding $parent[TransitioningContentControl].((viewModels:MainViewModel)DataContext).NavigationService.CanGoBack}">
-                                <PathIcon Data="{StaticResource SemiIconArrowLeft}" />
-                            </Button>
-                        </controls:ViewHeader.LeftContent>
-
-                        <!-- <controls:ViewHeader.RightContent> -->
-                        <!--     <Button Classes="HeaderButton Tertiary"> -->
-                        <!--         <PathIcon Data="{StaticResource SemiIconMore}"> -->
-                        <!--             <PathIcon.RenderTransform> -->
-                        <!--                 <RotateTransform Angle="90" /> -->
-                        <!--             </PathIcon.RenderTransform> -->
-                        <!--         </PathIcon> -->
-                        <!--     </Button> -->
-                        <!-- </controls:ViewHeader.RightContent> -->
-                    </controls:ViewHeader>
-                </DataTemplate>
-            </TransitioningContentControl.DataTemplates>
-        </TransitioningContentControl>
-
-        <TransitioningContentControl Grid.Row="1"
-                                     Content="{Binding NavigationService.Current}"
-                                     IsTransitionReversed="{Binding NavigationService.IsGoingBack}"
-                                     PageTransition="{StaticResource PageSlide}">
-            <TransitioningContentControl.DataTemplates>
-                <ui:ViewLocator />
-            </TransitioningContentControl.DataTemplates>
-        </TransitioningContentControl>
-    </Grid>
+        </TransitioningContentControl.PageTransition>
+    </TransitioningContentControl>
 </UserControl>

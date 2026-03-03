@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using Nyaavigator.Core.ViewModels;
 using Ursa.Common;
@@ -34,5 +35,34 @@ public partial class SettingsView : UserControl
             Title = "Select Theme",
             CanResize = false
         });
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        App.TopLevel?.BackRequested += OnBackRequested;
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+
+        App.TopLevel?.BackRequested -= OnBackRequested;
+    }
+
+    private void OnBackRequested(object? sender, RoutedEventArgs e)
+    {
+        if (e.Handled)
+        {
+            return;
+        }
+        e.Handled = true;
+
+        // TODO: implement better drawer
+        if (DataContext is SettingsViewModel viewModel)
+        {
+            viewModel.NavigationService.Pop();
+        }
     }
 }

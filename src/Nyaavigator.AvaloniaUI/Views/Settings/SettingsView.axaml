@@ -4,7 +4,7 @@
              xmlns:controls="clr-namespace:Nyaavigator.AvaloniaUI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:settings1="clr-namespace:Nyaavigator.AvaloniaUI.Views.Settings"
+             xmlns:settings="clr-namespace:Nyaavigator.AvaloniaUI.Views.Settings"
              xmlns:u="https://irihi.tech/ursa"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
@@ -18,20 +18,46 @@
 
     <Panel>
         <Panel.Styles>
-            <Style Selector="ScrollViewer#RootScrollViewer.Blur">
+            <Style Selector="Grid#ParentGrid.Blur">
                 <Setter Property="Effect" Value="blur(10)" />
             </Style>
         </Panel.Styles>
-        <ScrollViewer Name="RootScrollViewer"
-                      Classes.Blur="{Binding #SettingsDrawer.IsInModalStatus}">
-            <StackPanel>
-                <controls:SettingsItem Command="{Binding RelativeSource={RelativeSource AncestorType=settings1:SettingsView}, Path=OpenThemeSelectorCommand}"
-                                       Header="Theme"
-                                       Icon="{StaticResource SemiIconContrast}">
-                    <TextBlock Text="{Binding SettingsService.Settings.Theme}" />
-                </controls:SettingsItem>
-            </StackPanel>
-        </ScrollViewer>
+
+        <Grid Name="ParentGrid"
+              Classes.Blur="{Binding #SettingsDrawer.IsInModalStatus}"
+              RowDefinitions="Auto, *">
+            <controls:ViewHeader Title="Settings"
+                                 Grid.Row="0">
+                <controls:ViewHeader.LeftContent>
+                    <Button HorizontalAlignment="Left"
+                            Classes="HeaderButton Tertiary"
+                            Command="{Binding NavigationService.PopCommand}"
+                            IsVisible="{Binding NavigationService.CanGoBack}">
+                        <PathIcon Data="{StaticResource SemiIconArrowLeft}" />
+                    </Button>
+                </controls:ViewHeader.LeftContent>
+
+                <!-- <controls:ViewHeader.RightContent> -->
+                <!--     <Button Classes="HeaderButton Tertiary"> -->
+                <!--         <PathIcon Data="{StaticResource SemiIconMore}"> -->
+                <!--             <PathIcon.RenderTransform> -->
+                <!--                 <RotateTransform Angle="90" /> -->
+                <!--             </PathIcon.RenderTransform> -->
+                <!--         </PathIcon> -->
+                <!--     </Button> -->
+                <!-- </controls:ViewHeader.RightContent> -->
+            </controls:ViewHeader>
+
+            <ScrollViewer Grid.Row="1">
+                <StackPanel>
+                    <controls:SettingsItem Command="{Binding RelativeSource={RelativeSource AncestorType=settings:SettingsView}, Path=OpenThemeSelectorCommand}"
+                                           Header="Theme"
+                                           Icon="{StaticResource SemiIconContrast}">
+                        <TextBlock Text="{Binding SettingsService.Settings.Theme}" />
+                    </controls:SettingsItem>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
 
         <u:OverlayDialogHost x:Name="SettingsDrawer"
                              HostId="SettingsDrawerHost" />

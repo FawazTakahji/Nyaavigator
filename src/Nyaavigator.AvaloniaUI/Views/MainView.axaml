@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:viewModels="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -13,14 +15,42 @@
         <ui:DesignServiceLocator Type="viewModels:MainViewModel" />
     </Design.DataContext>
 
-    <TransitioningContentControl Content="{Binding NavigationService.Current}"
-                                 IsTransitionReversed="{Binding NavigationService.IsGoingBack}">
-        <TransitioningContentControl.DataTemplates>
-            <ui:ViewLocator />
-        </TransitioningContentControl.DataTemplates>
-        <TransitioningContentControl.PageTransition>
-            <PageSlide Orientation="Horizontal"
-                       Duration="0:00:00.300" />
-        </TransitioningContentControl.PageTransition>
-    </TransitioningContentControl>
+    <Panel>
+        <Panel.Styles>
+            <Style Selector="u|DefaultDialogControl.MessageBox /template/ ScrollViewer /template/ ScrollContentPresenter#PART_ContentPresenter">
+                <Setter Property="CanHorizontallyScroll" Value="False" />
+            </Style>
+
+            <Style Selector="TransitioningContentControl.Blur">
+                <Setter Property="Effect" Value="blur(10)" />
+            </Style>
+        </Panel.Styles>
+
+        <TransitioningContentControl Classes.Blur="{Binding #GlobalHost.IsInModalStatus}"
+                                     Content="{Binding NavigationService.Current}"
+                                     IsTransitionReversed="{Binding NavigationService.IsGoingBack}">
+            <TransitioningContentControl.DataTemplates>
+                <ui:ViewLocator />
+            </TransitioningContentControl.DataTemplates>
+            <TransitioningContentControl.PageTransition>
+                <PageSlide Orientation="Horizontal"
+                           Duration="0:00:00.300" />
+            </TransitioningContentControl.PageTransition>
+        </TransitioningContentControl>
+
+        <u:OverlayDialogHost Name="GlobalHost"
+                             HostId="Global"
+                             OverlayMaskBrush="Transparent">
+            <u:OverlayDialogHost.DialogDataTemplates>
+                <DataTemplate DataType="{x:Type system:String}">
+                    <SelectableTextBlock Margin="16,24"
+                                         VerticalAlignment="Center"
+                                         FontSize="14"
+                                         Text="{Binding}"
+                                         TextTrimming="CharacterEllipsis"
+                                         TextWrapping="Wrap" />
+                </DataTemplate>
+            </u:OverlayDialogHost.DialogDataTemplates>
+        </u:OverlayDialogHost>
+    </Panel>
 </UserControl>

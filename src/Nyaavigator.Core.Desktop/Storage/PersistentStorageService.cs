@@ -4,6 +4,8 @@ namespace Nyaavigator.Core.Desktop.Storage;
 
 public class PersistentStorageService : IPersistentStorageService
 {
+    private static string? _basePath;
+
     public string? Load(string file)
     {
         string path = Path.Combine(GetBasePath(), file);
@@ -20,20 +22,33 @@ public class PersistentStorageService : IPersistentStorageService
     {
         string basePath = GetBasePath();
         string path = Path.Combine(basePath, file);
-        Directory.CreateDirectory(basePath);
+
+        if (Path.GetDirectoryName(path) is not { } directory)
+        {
+            throw new Exception("Couldn't get directory name");
+        }
+        Directory.CreateDirectory(directory);
+
         File.WriteAllText(path, data);
     }
 
-    private string GetBasePath()
+    public static string GetBasePath()
     {
+        if (_basePath != null)
+        {
+            return _basePath;
+        }
+
         string portablePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "portable");
         if (Directory.Exists(portablePath))
         {
-            return portablePath;
+            _basePath = portablePath;
+            return _basePath;
         }
 
         // TODO: use different paths for linux and mac
-        string basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        return Path.Combine(basePath, Constants.Title);
+        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        _basePath = Path.Combine(appDataPath, Constants.Title);
+        return _basePath;
     }
 }

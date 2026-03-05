@@ -6,6 +6,8 @@ namespace Nyaavigator.Android.Storage;
 
 public class PersistentStorageService : IPersistentStorageService
 {
+    private static string? _basePath;
+
     public string? Load(string file)
     {
         string path = Path.Combine(GetBasePath(), file);
@@ -21,18 +23,26 @@ public class PersistentStorageService : IPersistentStorageService
     {
         string basePath = GetBasePath();
         string path = Path.Combine(basePath, file);
-        Directory.CreateDirectory(basePath);
+
+        if (Path.GetDirectoryName(path) is not { } directory)
+        {
+            throw new Exception("Couldn't get directory name");
+        }
+        Directory.CreateDirectory(directory);
+
         File.WriteAllText(path, data);
     }
 
-    private string GetBasePath()
+    public static string GetBasePath()
     {
-        string? basePath = Application.Context.GetExternalFilesDir(null)?.AbsolutePath;
-        if (string.IsNullOrEmpty(basePath))
+        if (_basePath != null)
         {
-            throw new InvalidOperationException("Couldn't get application files directory.");
+            return _basePath;
         }
 
-        return basePath;
+        _basePath = Application.Context.GetExternalFilesDir(null)?.AbsolutePath
+                    ?? Application.Context.GetExternalFilesDir(null)?.AbsolutePath
+                    ?? "/storage/emulated/0/Android/data/app.fawaztakahji.nyaavigator/files";
+        return _basePath;
     }
 }

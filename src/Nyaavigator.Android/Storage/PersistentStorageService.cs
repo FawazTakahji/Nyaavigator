@@ -33,6 +33,30 @@ public class PersistentStorageService : IPersistentStorageService
         File.WriteAllText(fullPath, data);
     }
 
+    public void Delete(string path)
+    {
+        File.Delete(Path.Combine(GetBasePath(), path));
+    }
+
+    public bool DirectoryExists(string path)
+    {
+        return Directory.Exists(Path.Combine(GetBasePath(), path));
+    }
+
+    public string[] GetFiles(string path)
+    {
+        string basePath = GetBasePath();
+        string fullPath = Path.Combine(basePath, path);
+
+        string[] files = Directory.GetFiles(fullPath);
+        for (int i = 0; i < files.Length; i++)
+        {
+            files[i] = files[i].Replace(basePath, "").TrimStart('/', '\\');
+        }
+
+        return files;
+    }
+
     public static string GetBasePath()
     {
         if (_basePath != null)

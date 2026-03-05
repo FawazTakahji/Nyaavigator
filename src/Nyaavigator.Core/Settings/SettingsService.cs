@@ -19,7 +19,7 @@ public partial class SettingsService : ObservableObject
 
     public void Load()
     {
-        string? json = _storage.Load(FileName);
+        string? json = _storage.Read(FileName);
         if (json is null)
         {
             return;
@@ -31,6 +31,6 @@ public partial class SettingsService : ObservableObject
     public void Save()
     {
         string json = JsonSerializer.Serialize(Settings);
-        _storage.Save(FileName, json);
+        _storage.Write(FileName, json);
     }
 }

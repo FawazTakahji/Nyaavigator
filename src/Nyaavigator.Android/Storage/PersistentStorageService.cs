@@ -8,29 +8,29 @@ public class PersistentStorageService : IPersistentStorageService
 {
     private static string? _basePath;
 
-    public string? Load(string file)
+    public string? Read(string path)
     {
-        string path = Path.Combine(GetBasePath(), file);
-        if (!File.Exists(path))
+        string fullPath = Path.Combine(GetBasePath(), path);
+
+        if (!File.Exists(fullPath))
         {
             return null;
         }
 
-        return File.ReadAllText(path);
+        return File.ReadAllText(fullPath);
     }
 
-    public void Save(string file, string data)
+    public void Write(string path, string data)
     {
-        string basePath = GetBasePath();
-        string path = Path.Combine(basePath, file);
+        string fullPath = Path.Combine(GetBasePath(), path);
 
-        if (Path.GetDirectoryName(path) is not { } directory)
+        if (Path.GetDirectoryName(fullPath) is not { } directory)
         {
             throw new Exception("Couldn't get directory name");
         }
         Directory.CreateDirectory(directory);
 
-        File.WriteAllText(path, data);
+        File.WriteAllText(fullPath, data);
     }
 
     public static string GetBasePath()

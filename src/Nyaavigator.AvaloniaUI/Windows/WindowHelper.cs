@@ -30,7 +30,7 @@ public static class WindowHelper
             };
 
             string json = JsonSerializer.Serialize(settings);
-            _storage.Save(FileName, json);
+            _storage.Write(FileName, json);
         }
         catch (Exception e)
         {
@@ -44,7 +44,7 @@ public static class WindowHelper
         {
             GetStorageService();
 
-            string? json = _storage.Load(FileName);
+            string? json = _storage.Read(FileName);
             if (json is null)
             {
                 return;

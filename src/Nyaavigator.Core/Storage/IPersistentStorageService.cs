@@ -2,6 +2,6 @@
 
 public interface IPersistentStorageService
 {
-    public string? Load(string file);
-    public void Save(string file, string data);
+    public string? Read(string path);
+    public void Write(string path, string data);
 }

@@ -35,8 +35,6 @@ public class Application : AvaloniaAndroidApplication<App>
                         o => o.UseJsonFormatter());
                 })
                 .BuildServiceProvider());
-
-        Logs.DeleteOldLogs(Ioc.Default);
     }
 
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)

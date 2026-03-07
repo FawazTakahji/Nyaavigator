@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.AvaloniaUI.Windows;
 using Nyaavigator.Core.Services;
+using Nyaavigator.Core.Utilities;
 using Nyaavigator.Core.ViewModels;
 
 namespace Nyaavigator.AvaloniaUI;
@@ -46,6 +47,7 @@ public partial class App : Application
             singleViewPlatform.MainView = view;
         }
 
+        Logs.DeleteOldLogs(Ioc.Default);
         base.OnFrameworkInitializationCompleted();
     }
 

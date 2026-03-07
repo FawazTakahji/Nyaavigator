@@ -6,7 +6,6 @@ using Nyaavigator.AvaloniaUI;
 using Nyaavigator.AvaloniaUI.Extensions;
 using Nyaavigator.Core.Desktop.Extensions;
 using Nyaavigator.Core.Extensions;
-using Nyaavigator.Core.Utilities;
 
 namespace Nyaavigator.Win32;
 
@@ -28,8 +27,6 @@ sealed class Program
                 .AddDesktopServices()
                 .AddUiServices()
                 .BuildServiceProvider());
-
-        Logs.DeleteOldLogs(Ioc.Default);
 
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()

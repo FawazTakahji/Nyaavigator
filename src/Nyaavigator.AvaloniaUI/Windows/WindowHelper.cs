@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nyaavigator.Core.Storage;
 
 namespace Nyaavigator.AvaloniaUI.Windows;
@@ -13,9 +14,11 @@ public static class WindowHelper
 {
     private const string FileName = "window.json";
     private static IPersistentStorageService? _storage;
+    private static ILogger? _logger;
 
     public static void SaveState(Window window)
     {
+        TryGetLogger()?.LogInformation("Saving window state");
         try
         {
             GetStorageService();
@@ -34,12 +37,13 @@ public static class WindowHelper
         }
         catch (Exception e)
         {
-            // TODO: add logging
+            TryGetLogger()?.LogError(e, "Failed to save window state");
         }
     }
 
     public static void LoadState(Window window)
     {
+        TryGetLogger()?.LogInformation("Loading window state");
         try
         {
             GetStorageService();
@@ -52,7 +56,7 @@ public static class WindowHelper
             WindowSettings? settings = JsonSerializer.Deserialize<WindowSettings>(json);
             if (settings is null)
             {
-                // TODO: add logging
+                TryGetLogger()?.LogWarning("Could not deserialize window settings");
                 return;
             }
 
@@ -75,7 +79,7 @@ public static class WindowHelper
                 else
                 {
                     window.Position = new PixelPoint(settings.X, settings.Y);
-                    // TODO: add logging
+                    TryGetLogger()?.LogWarning("Could not get screen containing window");
                 }
                 window.Width = settings.Width;
                 window.Height = settings.Height;
@@ -85,7 +89,7 @@ public static class WindowHelper
         }
         catch (Exception e)
         {
-            // TODO: add logging
+            TryGetLogger()?.LogError(e, "Failed to load window state");
         }
     }
 
@@ -98,5 +102,11 @@ public static class WindowHelper
         }
 
         _storage = Ioc.Default.GetRequiredService<IPersistentStorageService>();
+    }
+
+    private static ILogger? TryGetLogger()
+    {
+        _logger ??= Ioc.Default.GetService<ILoggerFactory>()?.CreateLogger(typeof(WindowHelper));
+        return _logger;
     }
 }

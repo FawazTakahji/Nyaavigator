@@ -1,28 +1,37 @@
 ﻿using System;
 using Avalonia.Styling;
+using Microsoft.Extensions.Logging;
 using Nyaavigator.Core.Services;
 using Nyaavigator.Core.Settings;
+using Nyaavigator.Core.Toasts;
 
 namespace Nyaavigator.AvaloniaUI.Services;
 
 public class AppManager : IAppManager
 {
+    private readonly ILogger<AppManager> _logger;
     private readonly SettingsService _settingsService;
+    private readonly IToastManager _toastManager;
 
-    public AppManager(SettingsService settingsService)
+    public AppManager(ILogger<AppManager>logger, SettingsService settingsService, IToastManager toastManager)
     {
+        _logger = logger;
         _settingsService = settingsService;
+        _toastManager = toastManager;
     }
 
     public void Initialize()
     {
+        _logger.LogInformation("Initializing app");
+        _logger.LogInformation("Loading settings");
         try
         {
             _settingsService.Load();
         }
         catch (Exception e)
         {
-            // TODO: add logging
+            _logger.LogError(e, "Failed to load settings");
+            _toastManager.Show("Could not load app settings", ToastType.Error, showClose: true);
         }
 
         SetTheme(_settingsService.Settings.Theme);
@@ -30,7 +39,13 @@ public class AppManager : IAppManager
 
     public void SetTheme(Theme theme)
     {
-        App.TopLevel?.RequestedThemeVariant = theme switch
+        if (App.TopLevel is null)
+        {
+            _logger.LogWarning("Could not set theme, top level is null");
+            _toastManager.Show("Could not set theme", ToastType.Warning, showClose: true);
+            return;
+        }
+        App.TopLevel.RequestedThemeVariant = theme switch
         {
             Theme.System => ThemeVariant.Default,
             Theme.Light => ThemeVariant.Light,

@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -13,6 +14,7 @@ namespace Nyaavigator.AvaloniaUI;
 
 public partial class App : Application
 {
+    public static event EventHandler? MainViewLoaded;
     public static TopLevel? TopLevel { get; private set; }
 
     public override void Initialize()
@@ -53,6 +55,7 @@ public partial class App : Application
         {
             TopLevel = TopLevel.GetTopLevel(control);
             Ioc.Default.GetRequiredService<IAppManager>().Initialize();
+            MainViewLoaded?.Invoke(this, EventArgs.Empty);
 
             control.Loaded -= MainView_Loaded;
         }

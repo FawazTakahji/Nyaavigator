@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 
-namespace Nyaavigator.AvaloniaUI.Views;
+namespace Nyaavigator.AvaloniaUI.Views.Search;
 
 public partial class SearchView : UserControl
 {

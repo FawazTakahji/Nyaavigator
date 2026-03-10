@@ -13,7 +13,7 @@ public partial class SearchViewModel : ViewModelBase, INavigable
     }
 
     [RelayCommand]
-    private void GoSettings()
+    private void PushSettings()
     {
         _navigationService.Push<SettingsViewModel>();
     }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:search="clr-namespace:Nyaavigator.AvaloniaUI.Views.Search"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:vm="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -13,6 +14,18 @@
         <ui:DesignServiceLocator Type="vm:SearchViewModel" />
     </Design.DataContext>
 
-    <Button Command="{Binding GoSettingsCommand}"
-            Content="Go Settings" />
+    <Panel>
+        <Grid RowDefinitions="Auto,*">
+            <Border Grid.Row="0"
+                    Padding="5">
+                <search:SearchBar />
+            </Border>
+
+            <ScrollViewer Grid.Row="1">
+                <TextBox HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Text="Placeholder" />
+            </ScrollViewer>
+        </Grid>
+    </Panel>
 </UserControl>

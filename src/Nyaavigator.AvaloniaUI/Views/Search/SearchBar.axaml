@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Nyaavigator.AvaloniaUI.Views.Search.SearchBar"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
+             xmlns:vm="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="vm:SearchViewModel"
+             mc:Ignorable="d">
+    <Design.DataContext>
+        <ui:DesignServiceLocator Type="vm:SearchViewModel" />
+    </Design.DataContext>
+
+    <TextBox Classes="Large"
+             GettingFocus="SearchBar_OnGettingFocus">
+        <TextBox.Styles>
+            <Style Selector="Button.BarButton">
+                <Setter Property="Width" Value="28" />
+                <Setter Property="Height" Value="28" />
+                <Setter Property="Theme" Value="{StaticResource InnerIconButton}" />
+            </Style>
+        </TextBox.Styles>
+
+        <TextBox.InnerLeftContent>
+            <Button Name="MoreButton"
+                    Classes="Large BarButton"
+                    Content="{StaticResource SemiIconMore}">
+                <Button.Styles>
+                    <Style Selector="MenuItem">
+                        <Setter Property="MinWidth" Value="150" />
+                    </Style>
+                    <Style Selector="PathIcon">
+                        <Setter Property="Theme" Value="{StaticResource InnerPathIcon}" />
+                    </Style>
+                </Button.Styles>
+
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                        <MenuItem Command="{Binding PushSettingsCommand}"
+                                  Header="Settings">
+                            <MenuItem.Icon>
+                                <PathIcon Data="{StaticResource SemiIconSetting}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </TextBox.InnerLeftContent>
+
+        <TextBox.InnerRightContent>
+            <Button Name="SearchButton"
+                    Classes="Large BarButton"
+                    Content="{StaticResource SemiIconSearch}" />
+        </TextBox.InnerRightContent>
+    </TextBox>
+</UserControl>

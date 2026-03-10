@@ -120,4 +120,33 @@ public class SettingsItem : TemplatedControl
         base.OnPointerCaptureLost(e);
         PseudoClasses.Remove(PressedClass);
     }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+
+        if (Command != null && e.Key is Key.Enter or Key.Space)
+        {
+            PseudoClasses.Add(PressedClass);
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        base.OnKeyUp(e);
+
+        if (Command != null && e.Key is Key.Enter or Key.Space)
+        {
+            if (PseudoClasses.Contains(PressedClass))
+            {
+                PseudoClasses.Remove(PressedClass);
+                if (Command.CanExecute(null))
+                {
+                    Command.Execute(null);
+                }
+                e.Handled = true;
+            }
+        }
+    }
 }

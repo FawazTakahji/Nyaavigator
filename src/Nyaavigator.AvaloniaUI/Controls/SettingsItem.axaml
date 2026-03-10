@@ -40,6 +40,7 @@
                         Margin="{TemplateBinding Margin}"
                         Padding="{TemplateBinding Padding}"
                         CornerRadius="{TemplateBinding CornerRadius}"
+                        Focusable="{TemplateBinding Focusable}"
                         Theme="{StaticResource CardBorder}">
                     <Grid ColumnDefinitions="Auto, Auto, *, Auto">
                         <PathIcon Grid.Column="0"
@@ -86,6 +87,7 @@
 
         <Style Selector="^:clickable">
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="True" />
         </Style>
 
         <Style Selector="^:clickable /template/ PathIcon#PART_Arrow">

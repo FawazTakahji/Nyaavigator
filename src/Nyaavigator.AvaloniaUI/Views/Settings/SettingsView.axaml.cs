@@ -42,6 +42,7 @@ public partial class SettingsView : UserControl
         base.OnLoaded(e);
 
         App.TopLevel?.BackRequested += OnBackRequested;
+        ThemeSetting.Focus();
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)

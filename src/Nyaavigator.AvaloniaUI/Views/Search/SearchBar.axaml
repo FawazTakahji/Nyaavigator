@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:search="clr-namespace:Nyaavigator.AvaloniaUI.Views.Search"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:vm="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -24,29 +25,39 @@
         </TextBox.Styles>
 
         <TextBox.InnerLeftContent>
-            <Button Name="MoreButton"
-                    Classes="Large BarButton"
-                    Content="{StaticResource SemiIconMore}">
-                <Button.Styles>
-                    <Style Selector="MenuItem">
-                        <Setter Property="MinWidth" Value="150" />
-                    </Style>
-                    <Style Selector="PathIcon">
-                        <Setter Property="Theme" Value="{StaticResource InnerPathIcon}" />
-                    </Style>
-                </Button.Styles>
+            <StackPanel Orientation="Horizontal"
+                        Spacing="8">
+                <Button Name="MoreButton"
+                        Classes="Large BarButton"
+                        Content="{StaticResource SemiIconMore}">
+                    <Button.Styles>
+                        <Style Selector="MenuItem">
+                            <Setter Property="MinWidth" Value="150" />
+                        </Style>
+                        <Style Selector="PathIcon">
+                            <Setter Property="Theme" Value="{StaticResource InnerPathIcon}" />
+                        </Style>
+                    </Button.Styles>
 
-                <Button.Flyout>
-                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                        <MenuItem Command="{Binding PushSettingsCommand}"
-                                  Header="Settings">
-                            <MenuItem.Icon>
-                                <PathIcon Data="{StaticResource SemiIconSetting}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </MenuFlyout>
-                </Button.Flyout>
-            </Button>
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                            <MenuItem Command="{Binding PushSettingsCommand}"
+                                      Header="Settings">
+                                <MenuItem.Icon>
+                                    <PathIcon Data="{StaticResource SemiIconSetting}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button Name="FilterButton"
+                        Width="24"
+                        Height="24"
+                        Classes="Large BarButton"
+                        Command="{Binding $parent[search:SearchBar].ShowSearchSettingsCommand}"
+                        Content="{StaticResource SemiIconDescend}" />
+            </StackPanel>
         </TextBox.InnerLeftContent>
 
         <TextBox.InnerRightContent>

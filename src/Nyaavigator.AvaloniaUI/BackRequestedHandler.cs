@@ -7,6 +7,7 @@ namespace Nyaavigator.AvaloniaUI;
 
 public static class BackRequestedHandler
 {
+    public static event EventHandler<RoutedEventArgs>? GlobalDialogBackRequested;
     private static readonly List<EventHandler<RoutedEventArgs>> Handlers = [];
     private static readonly Lock Lock = new();
 
@@ -33,6 +34,12 @@ public static class BackRequestedHandler
 
     private static void OnBackRequested(object? sender, RoutedEventArgs e)
     {
+        GlobalDialogBackRequested?.Invoke(sender, e);
+        if (e.Handled)
+        {
+            return;
+        }
+
         List<EventHandler<RoutedEventArgs>> snapshot;
 
         lock (Lock)

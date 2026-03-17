@@ -61,6 +61,7 @@
         </Grid>
 
         <u:OverlayDialogHost x:Name="SettingsDrawer"
-                             HostId="SettingsDrawerHost" />
+                             HostId="SettingsDrawerHost"
+                             OverlayMaskBrush="Transparent" />
     </Panel>
 </UserControl>

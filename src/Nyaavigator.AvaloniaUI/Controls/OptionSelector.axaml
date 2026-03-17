@@ -1,0 +1,51 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:Nyaavigator.AvaloniaUI.Behaviors"
+        xmlns:controls="using:Nyaavigator.AvaloniaUI.Controls"
+        xmlns:converters="clr-namespace:Nyaavigator.AvaloniaUI.Converters"
+        xmlns:nyaa="clr-namespace:Nyaavigator.Core.Nyaa;assembly=Nyaavigator.Core">
+    <Style Selector="controls|OptionSelector">
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="nyaa:SearchOption">
+                <ToggleButton Classes="Large"
+                              Command="{Binding $parent[controls:OptionSelector].SelectionCommand}"
+                              CommandParameter="{Binding}"
+                              Content="{Binding Title}">
+                    <ToggleButton.IsChecked>
+                        <MultiBinding Converter="{x:Static converters:ObjectConverters.Equal}">
+                            <Binding Path="$parent[controls:OptionSelector].SelectedItem" />
+                            <Binding />
+                        </MultiBinding>
+                    </ToggleButton.IsChecked>
+                </ToggleButton>
+            </DataTemplate>
+        </Setter>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                <HeaderedContentControl>
+                    <HeaderedContentControl.Header>
+                        <TextBlock Margin="0,0,0,10"
+                                   Classes="H4"
+                                   Text="{TemplateBinding Header}"
+                                   Theme="{StaticResource TitleTextBlock}" />
+                    </HeaderedContentControl.Header>
+
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  behaviors:ScrollViewerFadeEdge.FadedEdge="70"
+                                  HorizontalScrollBarVisibility="Hidden">
+                        <ItemsControl ItemTemplate="{TemplateBinding ItemTemplate}"
+                                      ItemsSource="{TemplateBinding ItemsSource}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="8" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </HeaderedContentControl>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

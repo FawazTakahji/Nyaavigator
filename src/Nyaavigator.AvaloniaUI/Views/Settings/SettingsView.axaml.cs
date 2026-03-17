@@ -41,7 +41,7 @@ public partial class SettingsView : UserControl
     {
         base.OnLoaded(e);
 
-        App.TopLevel?.BackRequested += OnBackRequested;
+        BackRequestedHandler.Subscribe(OnBackRequested);
         ThemeSetting.Focus();
     }
 
@@ -49,7 +49,7 @@ public partial class SettingsView : UserControl
     {
         base.OnUnloaded(e);
 
-        App.TopLevel?.BackRequested -= OnBackRequested;
+        BackRequestedHandler.Unsubscribe(OnBackRequested);
     }
 
     private void OnBackRequested(object? sender, RoutedEventArgs e)

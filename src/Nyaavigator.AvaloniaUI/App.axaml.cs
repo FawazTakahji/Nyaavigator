@@ -57,6 +57,7 @@ public partial class App : Application
         {
             TopLevel = TopLevel.GetTopLevel(control);
             Ioc.Default.GetRequiredService<IAppManager>().Initialize();
+            BackRequestedHandler.Initialize();
             MainViewLoaded?.Invoke(this, EventArgs.Empty);
 
             control.Loaded -= MainView_Loaded;

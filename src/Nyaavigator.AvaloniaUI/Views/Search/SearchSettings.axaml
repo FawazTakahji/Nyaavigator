@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="Nyaavigator.AvaloniaUI.Views.Search.SearchSettings"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Nyaavigator.AvaloniaUI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:nyaa="clr-namespace:Nyaavigator.Core.Nyaa;assembly=Nyaavigator.Core"
+             xmlns:overlayShared="clr-namespace:Ursa.Controls.OverlayShared;assembly=Ursa"
+             xmlns:search="clr-namespace:Nyaavigator.AvaloniaUI.Views.Search"
+             xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
+             xmlns:vm="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="vm:SearchViewModel"
+             mc:Ignorable="d">
+    <Design.DataContext>
+        <ui:DesignServiceLocator Type="vm:SearchViewModel" />
+    </Design.DataContext>
+
+    <StackPanel Spacing="10">
+        <StackPanel.Styles>
+            <Style Selector="TextBlock.OptionHeader">
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="Theme" Value="{StaticResource TitleTextBlock}" />
+            </Style>
+
+            <Style Selector="Button.HeaderButton">
+                <Setter Property="Padding" Value="4" />
+
+                <Style Selector="^ &gt; PathIcon">
+                    <Setter Property="Width" Value="24" />
+                    <Setter Property="Height" Value="24" />
+                </Style>
+            </Style>
+        </StackPanel.Styles>
+
+        <Grid Margin="0,0,0,10"
+              ColumnDefinitions="*, Auto, *">
+            <Button Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Classes="HeaderButton"
+                    Command="{Binding ResetOptionsCommand}"
+                    ToolTip.Tip="Clear">
+                <PathIcon Data="{StaticResource SemiIconDelete}" />
+            </Button>
+
+            <TextBlock Grid.Column="1"
+                       Classes="H3"
+                       Text="Options"
+                       Theme="{StaticResource TitleTextBlock}" />
+
+            <Button Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Classes="HeaderButton"
+                    Command="{Binding $parent[search:SearchSettings].CloseCommand}"
+                    CommandParameter="{Binding $parent[overlayShared:OverlayFeedbackElement]}"
+                    ToolTip.Tip="Close">
+                <PathIcon Data="{StaticResource SemiIconClose}" />
+            </Button>
+        </Grid>
+
+        <HeaderedContentControl>
+            <HeaderedContentControl.Header>
+                <TextBlock Classes="H4 OptionHeader"
+                           Text="Username" />
+            </HeaderedContentControl.Header>
+
+            <TextBox Classes="ClearButton Large"
+                     PlaceholderText="Only show results from this user"
+                     Text="{Binding Username}" />
+        </HeaderedContentControl>
+
+        <controls:OptionSelector Header="Category"
+                                 ItemsSource="{Binding Categories}"
+                                 SelectedItem="{Binding SelectedCategory}"
+                                 SelectionCommand="{Binding SetSelectedCategoryCommand}">
+            <controls:OptionSelector.ItemTemplate>
+                <DataTemplate DataType="nyaa:Category">
+                    <ToggleButton Classes="Large"
+                                  Command="{Binding $parent[controls:OptionSelector].SelectionCommand}"
+                                  CommandParameter="{Binding}"
+                                  Content="{Binding Title}"
+                                  IsCheckedChanged="ToggleButton_OnIsCheckedCategoryChanged">
+                        <ToggleButton.IsChecked>
+                            <MultiBinding Converter="{x:Static search:IsCategorySelectedConverter.Instance}">
+                                <Binding Path="$parent[controls:OptionSelector].SelectedItem" />
+                                <Binding />
+                            </MultiBinding>
+                        </ToggleButton.IsChecked>
+                    </ToggleButton>
+                </DataTemplate>
+            </controls:OptionSelector.ItemTemplate>
+        </controls:OptionSelector>
+
+        <controls:OptionSelector Header="Subcategory"
+                                 ItemsSource="{Binding SelectedCategory, Converter={x:Static search:SubcategoriesConverter.Instance}}"
+                                 SelectedItem="{Binding SelectedCategory}"
+                                 SelectionCommand="{Binding SetSelectedCategoryCommand}">
+            <controls:OptionSelector.DataTemplates>
+                <DataTemplate DataType="search:EmptyObject">
+                    <ToggleButton Classes="Large"
+                                  Command="{Binding $parent[controls:OptionSelector].SelectionCommand}"
+                                  CommandParameter="{Binding $parent[search:SearchSettings].((vm:SearchViewModel)DataContext).SelectedCategory.Parent}"
+                                  Content="All"
+                                  IsChecked="{Binding $parent[search:SearchSettings].((vm:SearchViewModel)DataContext).SelectedCategory.Parent, Converter={x:Static ObjectConverters.IsNull}}"
+                                  IsCheckedChanged="ToggleButton_OnIsCheckedCategoryChanged" />
+                </DataTemplate>
+            </controls:OptionSelector.DataTemplates>
+        </controls:OptionSelector>
+
+        <controls:OptionSelector Header="Filter"
+                                 ItemsSource="{Binding Filters}"
+                                 SelectedItem="{Binding SelectedFilter}"
+                                 SelectionCommand="{Binding SetSelectedFilterCommand}" />
+
+        <controls:OptionSelector Header="Sort By"
+                                 ItemsSource="{Binding SortOptions}"
+                                 SelectedItem="{Binding SelectedSortOption}"
+                                 SelectionCommand="{Binding SetSelectedSortOptionCommand}" />
+
+        <controls:OptionSelector Header="Sort Order"
+                                 ItemsSource="{Binding SortOrders}"
+                                 SelectedItem="{Binding SelectedSortOrder}"
+                                 SelectionCommand="{Binding SetSelectedSortOrderCommand}" />
+    </StackPanel>
+</UserControl>

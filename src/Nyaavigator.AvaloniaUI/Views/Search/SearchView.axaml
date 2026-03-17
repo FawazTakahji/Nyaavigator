@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:search="clr-namespace:Nyaavigator.AvaloniaUI.Views.Search"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:ui="clr-namespace:Nyaavigator.AvaloniaUI"
              xmlns:vm="clr-namespace:Nyaavigator.Core.ViewModels;assembly=Nyaavigator.Core"
              d:DesignHeight="450"
@@ -15,10 +16,17 @@
     </Design.DataContext>
 
     <Panel>
-        <Grid RowDefinitions="Auto,*">
+        <Panel.Styles>
+            <Style Selector="Grid.Blur">
+                <Setter Property="Effect" Value="blur(10)" />
+            </Style>
+        </Panel.Styles>
+
+        <Grid Classes.Blur="{Binding #Host.IsInModalStatus}"
+              RowDefinitions="Auto,*">
             <Border Grid.Row="0"
                     Padding="5">
-                <search:SearchBar />
+                <search:SearchBar Name="Bar" />
             </Border>
 
             <ScrollViewer Grid.Row="1">
@@ -27,5 +35,19 @@
                          Text="Placeholder" />
             </ScrollViewer>
         </Grid>
+
+        <u:OverlayDialogHost Name="Host"
+                             HostId="SearchViewHost"
+                             OverlayMaskBrush="Transparent">
+            <u:OverlayDialogHost.Styles>
+                <Style Selector="u|DefaultDrawerControl.SearchSettings">
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+
+                    <Style Selector="^ /template/ Border#PART_Root &gt; Border &gt; Grid &gt; Grid">
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                </Style>
+            </u:OverlayDialogHost.Styles>
+        </u:OverlayDialogHost>
     </Panel>
 </UserControl>

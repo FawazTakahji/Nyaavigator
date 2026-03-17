@@ -1,4 +1,5 @@
 ﻿using System;
+using Avalonia;
 using Avalonia.Styling;
 using Microsoft.Extensions.Logging;
 using Nyaavigator.Core.Services;
@@ -39,15 +40,15 @@ public class AppManager : IAppManager
 
     public void SetTheme(Theme theme)
     {
-        if (App.TopLevel is null)
+        if (Application.Current is null)
         {
-            _logger.LogWarning("Could not set theme, top level is null");
+            _logger.LogWarning("Could not set theme, current application is null");
             _toastManager.Show("Could not set theme", ToastType.Warning, showClose: true);
             return;
         }
-        App.TopLevel.RequestedThemeVariant = theme switch
+
+        Application.Current.RequestedThemeVariant = theme switch
         {
-            Theme.System => ThemeVariant.Default,
             Theme.Light => ThemeVariant.Light,
             Theme.Dark => ThemeVariant.Dark,
             _ => ThemeVariant.Default

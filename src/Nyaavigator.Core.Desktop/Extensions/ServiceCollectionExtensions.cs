@@ -14,7 +14,7 @@ public static class DesktopServices
             .AddLogging(logging =>
             {
 #if RELEASE
-                Microsoft.Extensions.Logging.LoggingBuilderExtensions.SetMinimumLevel(logging, LogLevel.Information);
+                Microsoft.Extensions.Logging.LoggingBuilderExtensions.SetMinimumLevel(logging, Microsoft.Extensions.Logging.LogLevel.Information);
 #endif
                 logging.AddZLoggerFile(Path.Combine(PersistentStorageService.GetBasePath(), "logs", Logs.GetLogFileName(DateTimeOffset.Now)),
                     o => o.UseJsonFormatter());

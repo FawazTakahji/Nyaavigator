@@ -32,21 +32,21 @@
                          CommandParameter="{x:Static settings:Theme.System}"
                          Content="System"
                          CornerRadius="3,3,0,0"
-                         IsChecked="{Binding SettingsService.Settings.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.System}}" />
+                         IsChecked="{Binding SettingsService.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.System}}" />
             <RadioButton Margin="2,0"
                          Classes="Large"
                          Command="{Binding SetThemeCommand}"
                          CommandParameter="{x:Static settings:Theme.Light}"
                          Content="Light"
                          CornerRadius="0"
-                         IsChecked="{Binding SettingsService.Settings.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.Light}}" />
+                         IsChecked="{Binding SettingsService.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.Light}}" />
             <RadioButton Margin="2,0,2,2"
                          Classes="Large"
                          Command="{Binding SetThemeCommand}"
                          CommandParameter="{x:Static settings:Theme.Dark}"
                          Content="Dark"
                          CornerRadius="0,0,3,3"
-                         IsChecked="{Binding SettingsService.Settings.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.Dark}}" />
+                         IsChecked="{Binding SettingsService.Theme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static settings:Theme.Dark}}" />
         </StackPanel>
     </Border>
 </UserControl>

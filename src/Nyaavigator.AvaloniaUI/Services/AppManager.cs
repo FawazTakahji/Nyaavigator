@@ -35,7 +35,7 @@ public class AppManager : IAppManager
             _toastManager.Show("Could not load app settings", ToastType.Error, showClose: true);
         }
 
-        SetTheme(_settingsService.Settings.Theme);
+        SetTheme(_settingsService.Theme);
     }
 
     public void SetTheme(Theme theme)

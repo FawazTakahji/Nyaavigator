@@ -7,7 +7,7 @@ public partial class AppSettings : ObservableObject
 {
     [ObservableProperty]
     [property: JsonConverter(typeof(JsonStringEnumConverter))]
-    private Theme _theme = Theme.System;
+    private Theme _theme;
 
     public int Version { get; set; } = 1;
 }

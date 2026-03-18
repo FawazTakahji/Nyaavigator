@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 using Nyaavigator.Core.Storage;
 
 namespace Nyaavigator.Core.Settings;
@@ -7,13 +8,15 @@ namespace Nyaavigator.Core.Settings;
 public partial class SettingsService : ObservableObject
 {
     private const string FileName = "settings.json";
+    private readonly ILogger<SettingsService> _logger;
     private readonly IPersistentStorageService _storage;
 
     [ObservableProperty]
-    private AppSettings _settings = new();
+    private Theme _theme = Theme.System;
 
-    public SettingsService(IPersistentStorageService storage)
+    public SettingsService(ILogger<SettingsService> logger, IPersistentStorageService storage)
     {
+        _logger = logger;
         _storage = storage;
     }
 
@@ -24,13 +27,24 @@ public partial class SettingsService : ObservableObject
         {
             return;
         }
+        AppSettings? settings = JsonSerializer.Deserialize<AppSettings>(json);
+        if (settings is null)
+        {
+            _logger.LogWarning("Failed to deserialize settings, using default settings.");
+            return;
+        }
 
-        Settings = JsonSerializer.Deserialize<AppSettings>(json) ?? throw new Exception("Deserialized settings are null.");
+        Theme = settings.Theme;
     }
 
     public void Save()
     {
-        string json = JsonSerializer.Serialize(Settings);
+        AppSettings settings = new()
+        {
+            Theme = Theme
+        };
+
+        string json = JsonSerializer.Serialize(settings);
         _storage.Write(FileName, json);
     }
 }

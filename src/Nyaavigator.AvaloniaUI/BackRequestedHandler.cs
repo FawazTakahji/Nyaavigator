@@ -35,16 +35,14 @@ public static class BackRequestedHandler
     private static void OnBackRequested(object? sender, RoutedEventArgs e)
     {
         GlobalDialogBackRequested?.Invoke(sender, e);
-        if (e.Handled)
-        {
-            return;
-        }
 
         List<EventHandler<RoutedEventArgs>> snapshot;
-
         lock (Lock)
         {
-            if (Handlers.Count == 0) return;
+            if (Handlers.Count < 1)
+            {
+                return;
+            }
             snapshot = new List<EventHandler<RoutedEventArgs>>(Handlers);
         }
 

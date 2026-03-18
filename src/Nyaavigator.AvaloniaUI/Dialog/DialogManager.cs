@@ -18,7 +18,7 @@ public class DialogManager : IDialogManager
 {
     public void Show(string? title, string? message, DialogButton buttons = DialogButton.OK, DialogMode mode = DialogMode.None)
     {
-        OverlayDialog.Show(message, "Global", new OverlayDialogOptions
+        OverlayDialog.Show(message, "MainHost", new OverlayDialogOptions
         {
             Title = title,
             Buttons = ConvertButton(buttons),
@@ -29,7 +29,7 @@ public class DialogManager : IDialogManager
 
     public async Task<DialogResult> ShowModal(string? title, string? message, DialogButton buttons = DialogButton.OK, DialogMode mode = DialogMode.None)
     {
-        UrsaDialogResult result = await OverlayDialog.ShowModal(CreateTextBlock(message), null, "Global", new OverlayDialogOptions
+        UrsaDialogResult result = await OverlayDialog.ShowModal(CreateTextBlock(message), null, "MainHost", new OverlayDialogOptions
         {
             Title = title,
             Buttons = ConvertButton(buttons),

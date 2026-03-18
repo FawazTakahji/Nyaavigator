@@ -36,7 +36,7 @@ public partial class MainView : UserControl
             return;
         }
 
-        OverlayFeedbackElement? overlay = GlobalHost.Children.OfType<OverlayFeedbackElement>().LastOrDefault();
+        OverlayFeedbackElement? overlay = OverlayHost.Children.OfType<OverlayFeedbackElement>().LastOrDefault();
         if (overlay is not null)
         {
             e.Handled = true;

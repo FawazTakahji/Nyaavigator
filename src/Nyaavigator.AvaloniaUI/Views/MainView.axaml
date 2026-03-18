@@ -26,7 +26,7 @@
             </Style>
         </Panel.Styles>
 
-        <TransitioningContentControl Classes.Blur="{Binding #GlobalHost.IsInModalStatus}"
+        <TransitioningContentControl Classes.Blur="{Binding #OverlayHost.IsInModalStatus}"
                                      Content="{Binding NavigationService.Current}"
                                      IsTransitionReversed="{Binding NavigationService.IsGoingBack}">
             <TransitioningContentControl.DataTemplates>
@@ -38,8 +38,8 @@
             </TransitioningContentControl.PageTransition>
         </TransitioningContentControl>
 
-        <u:OverlayDialogHost Name="GlobalHost"
-                             HostId="Global"
+        <u:OverlayDialogHost Name="OverlayHost"
+                             HostId="MainHost"
                              OverlayMaskBrush="Transparent">
             <u:OverlayDialogHost.DialogDataTemplates>
                 <DataTemplate DataType="{x:Type system:String}">

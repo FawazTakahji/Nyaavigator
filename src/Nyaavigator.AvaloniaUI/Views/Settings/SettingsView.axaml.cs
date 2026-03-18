@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Linq;
+using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using Nyaavigator.Core.ViewModels;
 using Ursa.Common;
 using Ursa.Controls;
+using Ursa.Controls.OverlayShared;
 
 namespace Nyaavigator.AvaloniaUI.Views.Settings;
 
@@ -26,7 +28,7 @@ public partial class SettingsView : UserControl
             return;
         }
 
-        Drawer.ShowModal<ThemeSelector, SettingsViewModel>(viewModel, SettingsDrawer.HostId, new()
+        Drawer.ShowModal<ThemeSelector, SettingsViewModel>(viewModel, OverlayHost.HostId, new()
         {
             Position = Position.Bottom,
             Buttons = DialogButton.None,
@@ -58,12 +60,11 @@ public partial class SettingsView : UserControl
         {
             return;
         }
-        e.Handled = true;
-
-        // TODO: implement better drawer
-        if (DataContext is SettingsViewModel viewModel)
+        OverlayFeedbackElement? overlay = OverlayHost.Children.OfType<OverlayFeedbackElement>().LastOrDefault();
+        if (overlay is not null)
         {
-            viewModel.NavigationService.Pop();
+            e.Handled = true;
+            overlay.Close();
         }
     }
 }

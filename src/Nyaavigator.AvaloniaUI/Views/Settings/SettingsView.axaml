@@ -24,7 +24,7 @@
         </Panel.Styles>
 
         <Grid Name="ParentGrid"
-              Classes.Blur="{Binding #SettingsDrawer.IsInModalStatus}"
+              Classes.Blur="{Binding #OverlayHost.IsInModalStatus}"
               RowDefinitions="Auto, *">
             <controls:ViewHeader Title="Settings"
                                  Grid.Row="0">
@@ -60,8 +60,8 @@
             </ScrollViewer>
         </Grid>
 
-        <u:OverlayDialogHost x:Name="SettingsDrawer"
-                             HostId="SettingsDrawerHost"
+        <u:OverlayDialogHost Name="OverlayHost"
+                             HostId="SettingsHost"
                              OverlayMaskBrush="Transparent" />
     </Panel>
 </UserControl>

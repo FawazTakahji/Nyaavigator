@@ -22,7 +22,7 @@
             </Style>
         </Panel.Styles>
 
-        <Grid Classes.Blur="{Binding #Host.IsInModalStatus}"
+        <Grid Classes.Blur="{Binding #OverlayHost.IsInModalStatus}"
               RowDefinitions="Auto,*">
             <Border Grid.Row="0"
                     Padding="5">
@@ -36,8 +36,8 @@
             </ScrollViewer>
         </Grid>
 
-        <u:OverlayDialogHost Name="Host"
-                             HostId="SearchViewHost"
+        <u:OverlayDialogHost Name="OverlayHost"
+                             HostId="SearchHost"
                              OverlayMaskBrush="Transparent">
             <u:OverlayDialogHost.Styles>
                 <Style Selector="u|DefaultDrawerControl.SearchSettings">

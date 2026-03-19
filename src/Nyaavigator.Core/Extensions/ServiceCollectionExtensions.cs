@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 using Nyaavigator.Core.Navigation;
 using Nyaavigator.Core.Settings;
 using Nyaavigator.Core.ViewModels;
@@ -7,13 +8,33 @@ namespace Nyaavigator.Core.Extensions;
 
 public static class CoreServices
 {
-    public static IServiceCollection AddCoreServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services.AddSingleton<MainViewModel>()
-            .AddSingleton<SearchViewModel>()
-            .AddSingleton<SettingsViewModel>()
+        public IServiceCollection AddCoreServices()
+        {
+            return services.AddHttpClients()
 
-            .AddSingleton<NavigationService>()
-            .AddSingleton<SettingsService>();
+                .AddSingleton<MainViewModel>()
+                .AddSingleton<SearchViewModel>()
+                .AddSingleton<SettingsViewModel>()
+
+                .AddSingleton<NavigationService>()
+                .AddSingleton<SettingsService>();
+        }
+
+        private IServiceCollection AddHttpClients()
+        {
+            services.AddHttpClient("nyaa", client =>
+                {
+                    client.DefaultRequestHeaders.Accept.ParseAdd("text/html; charset=UTF-8");
+                    client.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip, deflate");
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                });
+
+            return services;
+        }
     }
 }

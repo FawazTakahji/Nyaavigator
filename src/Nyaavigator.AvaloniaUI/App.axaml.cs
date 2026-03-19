@@ -9,7 +9,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.AvaloniaUI.Windows;
-using Nyaavigator.Core.Extensions;
 using Nyaavigator.Core.Services;
 using Nyaavigator.Core.Utilities;
 using Nyaavigator.Core.ViewModels;

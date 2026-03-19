@@ -49,6 +49,9 @@ sealed class Program
         catch (Exception e)
         {
             logger.LogCritical(e, "Unhandled exception");
+        }
+        finally
+        {
             Ioc.Default.DisposeLogProviders();
         }
     }

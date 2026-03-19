@@ -4,9 +4,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nyaavigator.AvaloniaUI.Views;
 using Nyaavigator.AvaloniaUI.Windows;
+using Nyaavigator.Core.Extensions;
 using Nyaavigator.Core.Services;
 using Nyaavigator.Core.Utilities;
 using Nyaavigator.Core.ViewModels;
@@ -29,6 +32,13 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var logger = Ioc.Default.GetService<ILogger<App>>();
+        if (logger is not null)
+        {
+            Dispatcher.UIThread.UnhandledException +=
+                (_, e) => logger.LogError(e.Exception, "Unhandled UI exception");
+        }
+
         MainView view = new MainView
         {
             DataContext = Ioc.Default.GetRequiredService<MainViewModel>()

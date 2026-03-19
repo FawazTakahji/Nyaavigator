@@ -8,10 +8,17 @@ namespace Nyaavigator.Core.Desktop.Extensions;
 
 public static class DesktopServices
 {
-    public static IServiceCollection AddDesktopServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services.AddSingleton<IPersistentStorageService, PersistentStorageService>()
-            .AddLogging(logging =>
+        public IServiceCollection AddDesktopServices()
+        {
+            return services.AddLogging()
+                .AddSingleton<IPersistentStorageService, PersistentStorageService>();
+        }
+
+        private IServiceCollection AddLogging()
+        {
+            return services.AddLogging(logging =>
             {
 #if RELEASE
                 Microsoft.Extensions.Logging.LoggingBuilderExtensions.SetMinimumLevel(logging, Microsoft.Extensions.Logging.LogLevel.Information);
@@ -19,5 +26,6 @@ public static class DesktopServices
                 logging.AddZLoggerFile(Path.Combine(PersistentStorageService.GetBasePath(), "logs", Logs.GetLogFileName(DateTimeOffset.Now)),
                     o => o.UseJsonFormatter());
             });
+        }
     }
 }

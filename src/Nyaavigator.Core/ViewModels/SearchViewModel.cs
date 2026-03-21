@@ -16,15 +16,19 @@ public partial class SearchViewModel : ViewModelBase, INavigable
     public List<SearchOption> SortOrders { get; }
 
     [ObservableProperty]
-    private string _username;
+    public partial string Username { get; set; }
+
     [ObservableProperty]
-    private Category _selectedCategory;
+    public partial Category SelectedCategory { get; set; }
+
     [ObservableProperty]
-    private SearchOption _selectedFilter;
+    public partial SearchOption SelectedFilter { get; set; }
+
     [ObservableProperty]
-    private SearchOption _selectedSortOption;
+    public partial SearchOption SelectedSortOption { get; set; }
+
     [ObservableProperty]
-    private SearchOption _selectedSortOrder;
+    public partial SearchOption SelectedSortOrder { get; set; }
 
     public SearchViewModel(NavigationService navigationService)
     {

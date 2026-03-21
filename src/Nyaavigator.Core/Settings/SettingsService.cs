@@ -12,9 +12,10 @@ public partial class SettingsService : ObservableObject
     private readonly IPersistentStorageService _storage;
 
     [ObservableProperty]
-    private string _baseUrl = AppSettings.DefaultBaseUrl;
+    public partial string BaseUrl { get; set; } = AppSettings.DefaultBaseUrl;
+
     [ObservableProperty]
-    private Theme _theme = AppSettings.DefaultTheme;
+    public partial Theme Theme { get; set; } = AppSettings.DefaultTheme;
 
     public SettingsService(ILogger<SettingsService> logger, IPersistentStorageService storage)
     {

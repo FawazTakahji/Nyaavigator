@@ -11,9 +11,11 @@ public partial class NavigationService : ObservableObject
     private readonly ObservableStack<INavigable> _history = new();
 
     [ObservableProperty]
-    private INavigable? _current;
+    public partial INavigable? Current { get; set; }
+
     [ObservableProperty]
-    private bool _isGoingBack;
+    public partial bool IsGoingBack { get; set; }
+
     public bool CanGoBack => _history.Count > 0;
 
     public NavigationService(IServiceProvider serviceProvider)

@@ -31,6 +31,9 @@ public class SettingsItem : TemplatedControl
     public static readonly StyledProperty<object?> ContentProperty =
         AvaloniaProperty.Register<SettingsItem, object?>(nameof(Content));
 
+    public static readonly StyledProperty<object?> FooterContentProperty = AvaloniaProperty.Register<SettingsItem, object?>(
+        nameof(FooterContent));
+
     public string Header
     {
         get => GetValue(HeaderProperty);
@@ -62,12 +65,20 @@ public class SettingsItem : TemplatedControl
         set => SetValue(ContentProperty, value);
     }
 
+    public object? FooterContent
+    {
+        get => GetValue(FooterContentProperty);
+        set => SetValue(FooterContentProperty, value);
+    }
+
     private ContentPresenter? _contentPart;
+    private ContentPresenter? _footerPart;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         _contentPart = e.NameScope.Find<ContentPresenter>("PART_ContentPresenter");
+        _footerPart = e.NameScope.Find<ContentPresenter>("PART_FooterPresenter");
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -82,7 +93,7 @@ public class SettingsItem : TemplatedControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        if (e.Handled || _contentPart is not null && _contentPart.IsPointerOver)
+        if (e.Handled || _contentPart?.IsPointerOver == true || _footerPart?.IsPointerOver == true)
         {
             return;
         }

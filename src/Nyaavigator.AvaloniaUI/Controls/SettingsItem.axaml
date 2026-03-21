@@ -42,8 +42,10 @@
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Focusable="{TemplateBinding Focusable}"
                         Theme="{StaticResource CardBorder}">
-                    <Grid ColumnDefinitions="Auto, Auto, *, Auto">
-                        <PathIcon Grid.Column="0"
+                    <Grid ColumnDefinitions="Auto, Auto, *, Auto"
+                          RowDefinitions="Auto, Auto">
+                        <PathIcon Grid.Row="0"
+                                  Grid.Column="0"
                                   Width="20"
                                   Height="20"
                                   Margin="0,0,12,0"
@@ -53,7 +55,8 @@
                                   IsVisible="{TemplateBinding Icon,
                                                               Converter={x:Static ObjectConverters.IsNotNull}}" />
 
-                        <StackPanel Grid.Column="1"
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="1"
                                     VerticalAlignment="Center">
                             <Label Classes="H4"
                                    Content="{TemplateBinding Header}"
@@ -67,12 +70,14 @@
                         </StackPanel>
 
                         <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Row="0"
                                           Grid.Column="2"
                                           VerticalAlignment="Center"
                                           HorizontalContentAlignment="Right"
                                           Content="{TemplateBinding Content}" />
 
                         <PathIcon Name="PART_Arrow"
+                                  Grid.Row="0"
                                   Grid.Column="3"
                                   Width="16"
                                   Height="16"
@@ -80,6 +85,13 @@
                                   Data="{StaticResource SemiIconArrowRight}"
                                   Foreground="{DynamicResource SemiColorText2}"
                                   IsVisible="False" />
+
+                        <ContentPresenter Name="PART_FooterPresenter"
+                                          Grid.Row="1"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="3"
+                                          Margin="0,8,0,0"
+                                          Content="{TemplateBinding FooterContent}" />
                     </Grid>
                 </Border>
             </ControlTemplate>

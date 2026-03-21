@@ -50,6 +50,14 @@
 
             <ScrollViewer Grid.Row="1">
                 <StackPanel>
+                    <controls:SettingsItem Header="Base URL"
+                                           Icon="{StaticResource SemiIconLink}">
+                        <controls:SettingsItem.FooterContent>
+                            <TextBox Classes="Large"
+                                     Text="{Binding SettingsService.BaseUrl}" />
+                        </controls:SettingsItem.FooterContent>
+                    </controls:SettingsItem>
+
                     <controls:SettingsItem Name="ThemeSetting"
                                            Command="{Binding RelativeSource={RelativeSource AncestorType=settings:SettingsView}, Path=OpenThemeSelectorCommand}"
                                            Header="Theme"
